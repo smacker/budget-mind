@@ -66,7 +66,7 @@ export function AddTransactionDialog({
       new Transaction(
         '',
         data.date,
-        isInflow ? data.amount : -data.amount,
+        (isInflow ? data.amount : -data.amount) * 100,
         data.category,
         data.account,
         data.memo,

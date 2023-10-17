@@ -121,6 +121,9 @@ export const $processedTransactions = computed(
               if (condValue instanceof Date) {
                 condValue = condValue.getTime();
               }
+              if (typeof condValue === 'number') {
+                condValue *= 100;
+              }
               if (txValue !== condValue) return false;
               break;
             }
@@ -137,12 +140,18 @@ export const $processedTransactions = computed(
                 return false;
               break;
             case 'before':
-            case 'less than':
               if (transaction[condition.field] >= condition.value) return false;
               break;
+            case 'less than':
+              if (transaction[condition.field] >= condition.value * 100)
+                return false;
+              break;
             case 'after':
-            case 'greater than':
               if (transaction[condition.field] <= condition.value) return false;
+              break;
+            case 'greater than':
+              if (transaction[condition.field] <= condition.value * 100)
+                return false;
               break;
             default: {
               const _: never = operator;

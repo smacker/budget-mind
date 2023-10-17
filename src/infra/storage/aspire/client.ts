@@ -8,6 +8,21 @@ import {
 import { GoogleSheetsApi } from './gsheet-api';
 import { ImportedData } from '../../../features/sync/importer';
 
+// Inside the app we use integers to represent amount everywhere
+// so we need to multiple by 100 when reading the data from remote
+// and divide when writing to the remote
+
+function toInteger(v?: unknown): number {
+  if (!v) {
+    return 0;
+  }
+  const n = +v;
+  if (isNaN(n)) {
+    throw new Error(`${v} is not a number`);
+  }
+  return n * 100;
+}
+
 export class AspireBudget extends GoogleSheetsApi {
   async import(): Promise<ImportedData> {
     const [accounts, tmp, transactions, budgetTransactions] = await Promise.all(
@@ -37,8 +52,8 @@ export class AspireBudget extends GoogleSheetsApi {
       values: [
         [
           this.dateToSerialNumber(data.date),
-          !inflow ? -data.amount : '',
-          inflow ? data.amount : '',
+          !inflow ? -data.amount / 100 : '',
+          inflow ? data.amount / 100 : '',
           data.category,
           data.account,
           data.memo,
@@ -69,6 +84,17 @@ export class AspireBudget extends GoogleSheetsApi {
       '!B9:H'
     )) as unknown[][];
 
+    values.forEach((row) => {
+      if (!row[6]) {
+        console.warn(
+          `Row doesn't have state`,
+          row,
+          'date',
+          this.serialNumberToDate(row[0] as number)
+        );
+      }
+    });
+
     // each row looks like this
     // date         | Outflow | Inflow | Category | Account | Memo   | Status
     // serialNumber | number  | number | string   | string  | string | ✅ | 🅿️ | *️⃣
@@ -78,7 +104,7 @@ export class AspireBudget extends GoogleSheetsApi {
         return new Transaction(
           'id',
           this.serialNumberToDate(row[0] as number),
-          (row[1] ? -row[1] : row[2] || 0) as number,
+          toInteger(row[1] ? -row[1] : row[2] || 0),
           (row[3] as string) || '',
           (row[4] as string) || '',
           (row[5] as string) || '',
@@ -139,8 +165,8 @@ export class AspireBudget extends GoogleSheetsApi {
               currentGroup.id,
               true,
               false,
-              row[2] ? (row[2] as number) : undefined,
-              row[3] ? (row[3] as number) : undefined
+              row[2] ? toInteger(row[2]) : undefined,
+              row[3] ? toInteger(row[3]) : undefined
             )
           );
           break;
@@ -156,8 +182,8 @@ export class AspireBudget extends GoogleSheetsApi {
               currentGroup.id,
               false,
               false,
-              row[2] ? (row[2] as number) : undefined,
-              row[3] ? (row[3] as number) : undefined
+              row[2] ? toInteger(row[2]) : undefined,
+              row[3] ? toInteger(row[3]) : undefined
             )
           );
           break;
@@ -196,7 +222,7 @@ export class AspireBudget extends GoogleSheetsApi {
       trxs.push(
         new BudgetTransaction(
           date,
-          row[1] as number,
+          toInteger(row[1]),
           row[2] as string,
           row[3] as string,
           row[4] as string
