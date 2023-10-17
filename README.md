@@ -1,0 +1,59 @@
+# Budget mind
+
+Better UI for Aspire Budgeting.
+
+### Development
+
+```
+pnpm run dev
+```
+
+### References
+
+#### Inspiration:
+
+https://app.actualbudget.com/budget
+
+#### Main libraries in use:
+
+MUI: https://mui.com/material-ui/react-text-field/
+Nanostores: https://github.com/nanostores/nanostores
+Date-fns: https://date-fns.org/v2.30.0/docs/isSameDay
+
+#### CSS guides:
+
+Flexbox: https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+
+#### Tech inspiration:
+
+Google Auth: https://github.com/MomenSherif/react-oauth
+
+### TODO List
+
+- [x] Store token in local storage
+- [x] Add new transaction
+- [x] Write transaction to google sheet
+- [x] Fix discrepancy in numbers between the app and google sheet
+- [x] Loader when fetching data
+- [x] Move constants to .env
+- [x] Handle 401 errors from API
+- [x] Dashboard UI
+- [x] Allow changing month in dashboard
+- [x] Add new transaction button from dashboard category
+- [x] Animation when switching between months on dashboard
+- [x] Allow transactions for "Available to budget", "Balance Adjustment", "Account Transfer"
+- [x] Add logo
+- [x] Clean-up for the initial version
+
+Next version:
+
+- [ ] Category transfers
+- [ ] Edit transactions
+- [ ] Add filter by month in the list of transactions
+
+Some other version:
+
+- [ ] Beautiful graphs - figure out what kind of graphs
+- [ ] Reconsolidation support
+- [ ] find a good UI/UX solution to change year on dashboard
+- [ ] Auto data refresh => this would need import re-work to be able to match imported rows (by ids?) and what to do with newly added transactions?
