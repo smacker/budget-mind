@@ -38,7 +38,9 @@ export function BudgetSummary() {
           <Typography variant="h5" component="div">
             <ColoredAmount amount={budgetSummary.toBudget} />
           </Typography>
-          <Typography color="text.secondary">To budget</Typography>
+          <Typography color="text.secondary">
+            {budgetSummary.toBudget < 0 ? 'Overbudgeted' : 'To budget'}
+          </Typography>
         </SummaryCardContent>
       </SummaryCard>
       <SummaryCard>
