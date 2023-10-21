@@ -75,6 +75,33 @@ export class AspireBudget extends GoogleSheetsApi {
     }
   }
 
+  async addBudgetTransaction(data: BudgetTransaction): Promise<void> {
+    const body = {
+      majorDimension: 'ROWS',
+      values: [
+        [
+          this.dateToSerialNumber(data.date),
+          data.amount / 100,
+          data.fromCategory,
+          data.toCategory,
+          data.memo,
+        ],
+      ],
+    };
+
+    const resp = await this.fetch(
+      `/values/Category Transfers!B:G:append?valueInputOption=USER_ENTERED`,
+      {
+        method: 'POST',
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (resp.status !== 200) {
+      throw new Error(`Failed to add budget transaction: ${resp.status}`);
+    }
+  }
+
   // TODO: add validation:
   // - without status
   // - available to budget as outflow

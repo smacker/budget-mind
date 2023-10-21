@@ -23,6 +23,14 @@ export const addTransaction = action(
   }
 );
 
+export const addBudgetTransaction = action(
+  $budgetTransactions,
+  'addBudgetTransaction',
+  async (store, tx: BudgetTransaction): Promise<void> => {
+    store.set([...store.get(), tx]);
+  }
+);
+
 // State scoped for the feature itself
 
 export const dateFields = ['date'] as const;

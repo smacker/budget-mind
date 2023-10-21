@@ -1,5 +1,9 @@
 import { useStore } from '@nanostores/react';
-import { DashboardTableItem, $currentBudget } from './state';
+import {
+  DashboardTableItem,
+  $currentBudget,
+  addToBudgetCategory,
+} from './state';
 
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
@@ -9,11 +13,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import { Amount } from '../../core/components/Amount';
 import { SteppedAmount } from '../../core/components/SteppedAmount';
+import { BudgetedInput } from './BudgetedInput';
 import { $showAddTransactionPopup } from '../../features/transactions/state';
 
 function GroupRow({ row }: { row: DashboardTableItem }) {
@@ -28,7 +32,7 @@ function GroupRow({ row }: { row: DashboardTableItem }) {
       <TableCell scope="row" sx={{ lineHeight: '28px', fontWeight: 'bold' }}>
         {row.name}
       </TableCell>
-      <TableCell align="right" sx={{ color: '#AAAAAA' }}>
+      <TableCell align="right" sx={{ color: '#AAAAAA', paddingRight: '22px' }}>
         <Amount amount={row.budgeted} />
       </TableCell>
       <TableCell align="right" sx={{ color: '#AAAAAA' }}>
@@ -37,7 +41,7 @@ function GroupRow({ row }: { row: DashboardTableItem }) {
       <TableCell align="right" sx={{ color: '#AAAAAA' }}>
         <Amount amount={row.available} />
       </TableCell>
-      <TableCell></TableCell>
+      <TableCell sx={{ paddingLeft: 0 }}></TableCell>
     </TableRow>
   );
 }
@@ -159,7 +163,13 @@ function CategoryRow({ row }: { row: DashboardTableItem }) {
         </Box>
       </TableCell>
       <TableCell align="right">
-        <Amount amount={row.budgeted} />
+        <BudgetedInput
+          amount={row.budgeted}
+          onChange={(v) => addToBudgetCategory(row.name, v - row.budgeted)}
+          monthlyBudget={row.monthlyBudget}
+          available={row.available}
+          goal={row.goal}
+        />
       </TableCell>
       <TableCell align="right">
         <Amount amount={row.activity} />
@@ -170,7 +180,7 @@ function CategoryRow({ row }: { row: DashboardTableItem }) {
           target={row.goal || row.monthlyBudget}
         />
       </TableCell>
-      <TableCell>
+      <TableCell sx={{ paddingLeft: 0 }}>
         <Progress value={progress} />
       </TableCell>
     </TableRow>
@@ -186,10 +196,16 @@ export function BudgetTable() {
         <TableHead>
           <TableRow>
             <TableCell sx={{ lineHeight: '28px' }}>Category</TableCell>
-            <TableCell align="right">Budgeted</TableCell>
-            <TableCell align="right">Activity</TableCell>
-            <TableCell align="right">Available</TableCell>
-            <TableCell></TableCell>
+            <TableCell align="right" width={150} sx={{ paddingRight: '22px' }}>
+              Budgeted
+            </TableCell>
+            <TableCell align="right" width={144}>
+              Activity
+            </TableCell>
+            <TableCell align="right" width={150}>
+              Available
+            </TableCell>
+            <TableCell width={40} sx={{ paddingLeft: 0 }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

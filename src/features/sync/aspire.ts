@@ -1,8 +1,11 @@
 import { task, computed, onAction } from 'nanostores';
 import { importData } from './importer';
 import { AspireBudget } from '../../infra/storage/aspire/client';
-import { Transaction } from '../../core/models';
-import { $transactions } from '../../features/transactions/state';
+import { BudgetTransaction, Transaction } from '../../core/models';
+import {
+  $budgetTransactions,
+  $transactions,
+} from '../../features/transactions/state';
 import { $token, logout } from './google';
 import { GoogleSheetsApiError } from '../../infra/storage/aspire/gsheet-api';
 
@@ -59,5 +62,17 @@ onAction($transactions, async ({ actionName, args }): Promise<void> => {
 
     const data = args[0] as Transaction;
     return client.addTransaction(data);
+  }
+});
+
+onAction($budgetTransactions, async ({ actionName, args }): Promise<void> => {
+  if (actionName === 'addBudgetTransaction') {
+    const client = $aspireClient.get();
+    if (!client) {
+      return;
+    }
+
+    const data = args[0] as BudgetTransaction;
+    return client.addBudgetTransaction(data);
   }
 });

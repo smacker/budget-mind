@@ -5,12 +5,14 @@ import {
   balanceAdjustment,
   startingBalance,
 } from '../../core/constants';
+import { BudgetTransaction } from '../../core/models';
 import { $categoryGroups, $userCategories, $accounts } from '../../core/state';
 import {
   $transactions,
   $budgetTransactions,
+  addBudgetTransaction,
 } from '../../features/transactions/state';
-import { startOfMonth, endOfMonth, startOfDay } from 'date-fns';
+import { startOfMonth, endOfMonth, startOfDay, isAfter } from 'date-fns';
 
 // TODO: add a timer to update
 export const $today = atom<Date>(startOfDay(new Date()));
@@ -238,3 +240,19 @@ export const $budgetSummary = computed(
     return { toBudget, spent, budgeted };
   }
 );
+
+// Actions
+
+export async function addToBudgetCategory(
+  categoryName: string,
+  amount: number,
+  memo = ''
+) {
+  const today = $today.get();
+  const selectedMonth = $selectedMonth.get();
+  const date = isAfter(selectedMonth, today) ? selectedMonth : today;
+
+  addBudgetTransaction(
+    new BudgetTransaction(date, amount, availableToBudget, categoryName, memo)
+  );
+}

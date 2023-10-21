@@ -1,7 +1,13 @@
-import { currencyFormatter } from '../formatters';
+import { currencyFormat } from '../formatters';
 
-export function Amount({ amount, color }: { amount: number; color?: string }) {
+export function Amount({
+  amount,
+  color,
+  ...rest
+}: { amount: number; color?: string } & React.HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span style={{ color }}>{currencyFormatter.format(amount / 100)}</span>
+    <span {...rest} style={{ color, ...rest.style }}>
+      {currencyFormat(amount / 100)}
+    </span>
   );
 }
