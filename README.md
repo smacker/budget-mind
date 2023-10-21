@@ -30,6 +30,8 @@ Google Auth: https://github.com/MomenSherif/react-oauth
 
 ### TODO List
 
+MVP:
+
 - [x] Store token in local storage
 - [x] Add new transaction
 - [x] Write transaction to google sheet
@@ -47,13 +49,18 @@ Google Auth: https://github.com/MomenSherif/react-oauth
 
 Next version:
 
+- [x] Ability to budget
 - [ ] Category transfers
-- [ ] Edit transactions
 - [ ] Add filter by month in the list of transactions
+- [ ] Quick search in transaction
+- [ ] Find a good UI/UX solution to change year on dashboard
 
 Some other version:
 
+- [ ] Edit transactions
 - [ ] Beautiful graphs - figure out what kind of graphs
+- [ ] Bulk actions with transactions
 - [ ] Reconsolidation support
-- [ ] find a good UI/UX solution to change year on dashboard
+- [ ] Split transactions
+- [ ] Settings
 - [ ] Auto data refresh => this would need import re-work to be able to match imported rows (by ids?) and what to do with newly added transactions?
