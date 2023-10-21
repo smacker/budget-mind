@@ -27,6 +27,8 @@ export interface DashboardTableItem {
   budgeted: number;
   activity: number;
   available: number;
+  monthlyBudget?: number;
+  goal?: number;
 }
 
 export const $currentBudget = computed(
@@ -93,6 +95,8 @@ export const $currentBudget = computed(
             available:
               (totalBudgeted[category.name] || 0) +
               (totalActivities[category.name] || 0),
+            monthlyBudget: category.monthlyBudget,
+            goal: category.goal,
           } satisfies DashboardTableItem)
       );
 
