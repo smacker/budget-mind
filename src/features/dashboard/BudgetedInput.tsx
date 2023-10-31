@@ -55,7 +55,10 @@ export function BudgetedInput({
     // Editing non-budgeted budgeted category is the main use-case
     if (amount === 0) {
       if (monthlyBudget) {
-        if (available < monthlyBudget) {
+        if (
+          available < monthlyBudget &&
+          monthlyBudget != monthlyBudget - available
+        ) {
           options.push({
             amount: monthlyBudget - available,
             label: `To monthly amount`,
