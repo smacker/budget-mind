@@ -33,7 +33,7 @@ export default function DashboardPage() {
   return (
     <Main appBarChildren={<AppBar />}>
       <Box display="flex" flexDirection="row">
-        <Box flexGrow={1} ref={containerRef} overflow="hidden">
+        <Box flexGrow={1} ref={containerRef}>
           <Slide
             container={containerRef.current}
             direction={direction}
