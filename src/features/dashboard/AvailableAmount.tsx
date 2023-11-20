@@ -75,7 +75,22 @@ function ActionBox({
   const [selectedCategoryName, setSelectedCategoryName] = useState<string>('');
 
   return (
-    <Box padding="10px">
+    <Box
+      component={'form'}
+      onSubmit={() => {
+        if (!selectedCategoryName) {
+          return;
+        }
+
+        const amountNumber = parseCurrencyStringOrZero(amount) * 100;
+        if (amountNumber <= 0) {
+          return;
+        }
+
+        onSubmit(selectedCategoryName, amountNumber);
+      }}
+      padding="10px"
+    >
       <Autocomplete
         size="small"
         renderInput={(params) => (
@@ -108,12 +123,7 @@ function ActionBox({
           disabled={
             !selectedCategoryName || parseCurrencyStringOrZero(amount) <= 0
           }
-          onClick={() =>
-            onSubmit(
-              selectedCategoryName,
-              parseCurrencyStringOrZero(amount) * 100
-            )
-          }
+          type="submit"
         >
           Transfer
         </Button>
