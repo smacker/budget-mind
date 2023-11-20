@@ -13,17 +13,10 @@ import {
   currencyFormat,
   currencyNumberFormat,
   currencySymbol,
+  parseCurrencyStringOrZero,
 } from '../../core/formatters';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-
-function parseInputValue(v: string): number {
-  const number = parseFloat(v);
-  if (isNaN(number)) {
-    return 0;
-  }
-  return number;
-}
 
 export function BudgetedInput({
   amount,
@@ -100,7 +93,7 @@ export function BudgetedInput({
     (e: React.KeyboardEvent<HTMLDivElement>) => {
       if (e.code === 'Enter') {
         inputRef.current?.blur();
-        onChange(parseInputValue(value) * 100, true);
+        onChange(parseCurrencyStringOrZero(value) * 100, true);
         return;
       }
       if (e.code === 'Escape') {
@@ -116,7 +109,7 @@ export function BudgetedInput({
     if (!focused) {
       return;
     }
-    const v = parseInputValue(value);
+    const v = parseCurrencyStringOrZero(value);
     setValue(currencyFormat(v));
     if (v * 100 !== amount) {
       onChange(v * 100);

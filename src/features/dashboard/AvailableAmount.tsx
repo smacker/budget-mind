@@ -17,7 +17,10 @@ import { useStore } from '@nanostores/react';
 import { SteppedAmount } from '../../core/components/SteppedAmount';
 import { $categories } from '../../core/state';
 import { moveAmountToCategory } from './state';
-import { currencyNumberFormat } from '../../core/formatters';
+import {
+  currencyNumberFormat,
+  parseCurrencyStringOrZero,
+} from '../../core/formatters';
 
 type actions = 'cover' | 'transferTo' | 'transferFrom';
 
@@ -49,14 +52,6 @@ function ActionList({
       </ListItem>
     </List>
   );
-}
-
-function parseInputValue(v: string): number {
-  const number = parseFloat(v);
-  if (isNaN(number)) {
-    return 0;
-  }
-  return number;
 }
 
 function ActionBox({
@@ -110,9 +105,14 @@ function ActionBox({
       <Box textAlign="right">
         <Button
           size="small"
-          disabled={!selectedCategoryName || parseInputValue(amount) <= 0}
+          disabled={
+            !selectedCategoryName || parseCurrencyStringOrZero(amount) <= 0
+          }
           onClick={() =>
-            onSubmit(selectedCategoryName, parseInputValue(amount) * 100)
+            onSubmit(
+              selectedCategoryName,
+              parseCurrencyStringOrZero(amount) * 100
+            )
           }
         >
           Transfer
