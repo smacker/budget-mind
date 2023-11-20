@@ -122,19 +122,26 @@ function ActionBox({
   );
 }
 
-function ActionMoveTo({ categoryNameFrom }: { categoryNameFrom: string }) {
-  const onSubmit = useCallback(
+function ActionMoveTo({
+  categoryNameFrom,
+  onSubmit,
+}: {
+  categoryNameFrom: string;
+  onSubmit: () => void;
+}) {
+  const submit = useCallback(
     (selectedCategoryName: string, amount: number) => {
       moveAmountToCategory(selectedCategoryName, categoryNameFrom, amount);
+      onSubmit();
     },
-    [categoryNameFrom]
+    [categoryNameFrom, onSubmit]
   );
 
   return (
     <ActionBox
       categoryLabel="To Category"
       currentCategoryName={categoryNameFrom}
-      onSubmit={onSubmit}
+      onSubmit={submit}
     />
   );
 }
@@ -142,15 +149,18 @@ function ActionMoveTo({ categoryNameFrom }: { categoryNameFrom: string }) {
 function ActionMoveFrom({
   categoryNameTo,
   amount,
+  onSubmit,
 }: {
   categoryNameTo: string;
   amount?: number;
+  onSubmit: () => void;
 }) {
-  const onSubmit = useCallback(
+  const submit = useCallback(
     (selectedCategoryName: string, amount: number) => {
       moveAmountToCategory(categoryNameTo, selectedCategoryName, amount);
+      onSubmit();
     },
-    [categoryNameTo]
+    [categoryNameTo, onSubmit]
   );
 
   return (
@@ -158,7 +168,7 @@ function ActionMoveFrom({
       categoryLabel="From Category"
       currentCategoryName={categoryNameTo}
       suggestedAmount={amount}
-      onSubmit={onSubmit}
+      onSubmit={submit}
     />
   );
 }
@@ -175,18 +185,31 @@ export function AvailableAmount({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [state, setState] = useState<'select' | actions>('select');
 
+  const closePopup = useCallback(() => {
+    setAnchorEl(null);
+    setState('select');
+  }, [setAnchorEl, setState]);
+
   let content;
   switch (state) {
     case 'cover':
       content = (
-        <ActionMoveFrom categoryNameTo={categoryName} amount={-amount} />
+        <ActionMoveFrom
+          categoryNameTo={categoryName}
+          amount={-amount}
+          onSubmit={closePopup}
+        />
       );
       break;
     case 'transferTo':
-      content = <ActionMoveTo categoryNameFrom={categoryName} />;
+      content = (
+        <ActionMoveTo categoryNameFrom={categoryName} onSubmit={closePopup} />
+      );
       break;
     case 'transferFrom':
-      content = <ActionMoveFrom categoryNameTo={categoryName} />;
+      content = (
+        <ActionMoveFrom categoryNameTo={categoryName} onSubmit={closePopup} />
+      );
       break;
     default:
       content = (
@@ -203,12 +226,7 @@ export function AvailableAmount({
         sx={{ paddingTop: '2px', paddingBottom: '2px' }}
       />
       <Popper open={!!anchorEl} anchorEl={anchorEl}>
-        <ClickAwayListener
-          onClickAway={() => {
-            setAnchorEl(null);
-            setState('select');
-          }}
-        >
+        <ClickAwayListener onClickAway={closePopup}>
           <Paper>{content}</Paper>
         </ClickAwayListener>
       </Popper>
