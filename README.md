@@ -46,11 +46,12 @@ MVP:
 - [x] Allow transactions for "Available to budget", "Balance Adjustment", "Account Transfer"
 - [x] Add logo
 - [x] Clean-up for the initial version
+- [ ] Un-hardcode spreadsheet id
 
 Next version:
 
 - [x] Ability to budget
-- [ ] Category transfers
+- [x] Category transfers
 - [ ] Add filter by month in the list of transactions
 - [ ] Quick search in transaction
 - [ ] Find a good UI/UX solution to change year on dashboard

@@ -243,8 +243,9 @@ export const $budgetSummary = computed(
 
 // Actions
 
-export async function addToBudgetCategory(
-  categoryName: string,
+export async function moveAmountToCategory(
+  toCategoryName: string,
+  fromCategoryName: string,
   amount: number,
   memo = ''
 ) {
@@ -253,6 +254,14 @@ export async function addToBudgetCategory(
   const date = isAfter(selectedMonth, today) ? selectedMonth : today;
 
   addBudgetTransaction(
-    new BudgetTransaction(date, amount, availableToBudget, categoryName, memo)
+    new BudgetTransaction(date, amount, fromCategoryName, toCategoryName, memo)
   );
+}
+
+export async function addToBudgetCategory(
+  categoryName: string,
+  amount: number,
+  memo = ''
+) {
+  return moveAmountToCategory(categoryName, availableToBudget, amount, memo);
 }

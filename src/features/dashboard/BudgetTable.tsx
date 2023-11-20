@@ -16,7 +16,7 @@ import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import { Amount } from '../../core/components/Amount';
-import { SteppedAmount } from '../../core/components/SteppedAmount';
+import { AvailableAmount } from './AvailableAmount';
 import { BudgetedInput } from './BudgetedInput';
 import { $showAddTransactionPopup } from '../../features/transactions/state';
 
@@ -175,7 +175,8 @@ function CategoryRow({ row }: { row: DashboardTableItem }) {
         <Amount amount={row.activity} />
       </TableCell>
       <TableCell align="right">
-        <SteppedAmount
+        <AvailableAmount
+          categoryName={row.name}
           amount={row.available}
           target={row.goal || row.monthlyBudget}
         />

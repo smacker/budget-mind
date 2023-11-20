@@ -7,5 +7,5 @@ export function ColoredAmount({ amount }: { amount: number }) {
   } else if (amount > 0) {
     color = 'green';
   }
-  return <Amount amount={amount} color={color} />;
+  return <Amount amount={amount} textColor={color} />;
 }

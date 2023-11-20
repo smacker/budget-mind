@@ -108,10 +108,10 @@ function rowContent(_index: number, row: TransactionTableItem) {
           value = value === 'settled' ? '✅' : '🅿️';
         }
         if (column.dataKey === 'outflow' && value) {
-          value = <Amount amount={-value} color="red" />;
+          value = <Amount amount={-value} textColor="red" />;
         }
         if (column.dataKey === 'inflow' && value) {
-          value = <Amount amount={value} color="green" />;
+          value = <Amount amount={value} textColor="green" />;
         }
 
         return (

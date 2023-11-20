@@ -1,12 +1,13 @@
-import { Amount } from './Amount';
+import { Amount, AmountProps } from './Amount';
 
 export function SteppedAmount({
   amount,
   target,
+  ...rest
 }: {
   amount: number;
   target?: number;
-}) {
+} & AmountProps) {
   let color;
 
   if (amount === 0) {
@@ -19,5 +20,5 @@ export function SteppedAmount({
     color = 'green';
   }
 
-  return <Amount amount={amount} color={color} />;
+  return <Amount amount={amount} textColor={color} {...rest} />;
 }

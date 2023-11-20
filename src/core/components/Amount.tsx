@@ -1,13 +1,20 @@
+import Button, { ButtonProps } from '@mui/material/Button';
 import { currencyFormat } from '../formatters';
 
-export function Amount({
-  amount,
-  color,
-  ...rest
-}: { amount: number; color?: string } & React.HTMLAttributes<HTMLSpanElement>) {
+export type AmountProps = {
+  amount: number;
+  textColor?: string;
+} & Omit<ButtonProps, 'children'>;
+
+export function Amount({ amount, textColor, onClick, ...rest }: AmountProps) {
+  const Element = onClick ? Button : 'span';
   return (
-    <span {...rest} style={{ color, ...rest.style }}>
+    <Element
+      onClick={onClick}
+      {...rest}
+      style={{ color: textColor, ...rest.style }}
+    >
       {currencyFormat(amount / 100)}
-    </span>
+    </Element>
   );
 }
