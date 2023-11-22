@@ -1,5 +1,6 @@
 import { atom, computed, onMount } from 'nanostores';
 import { persistentAtom } from '@nanostores/persistent';
+import { scopes as gdriveScopes } from '../../infra/storage/aspire/gdrive-api';
 import { scopes as gsheetScopes } from '../../infra/storage/aspire/gsheet-api';
 
 // Load google GSI library asynchronously
@@ -27,7 +28,9 @@ onMount($scriptLoadedSuccessfully, () => {
 
 // Create google token client instance
 
-const scope = `openid profile email ${gsheetScopes.join(' ')}`;
+const scope = `openid profile email ${[...gdriveScopes, ...gsheetScopes].join(
+  ' '
+)}`;
 
 const $googleClient = computed($scriptLoadedSuccessfully, (loaded) => {
   if (!loaded) return null;

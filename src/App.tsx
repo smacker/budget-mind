@@ -12,10 +12,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 
-import MenuSidebar from './layout/MenuSidebar';
-import WelcomePage from './layout/WelcomePage';
 import NotFoundPage from './layout/NotFoundPage';
 import LoadingPage from './layout/LoadingPage';
+import MenuSidebar from './layout/MenuSidebar';
+import WelcomePage from './layout/WelcomePage';
+import SelectSpreadSheetPage from './features/sync/SelectSpreadSheetPage';
 import DashboardPage from './features/dashboard/DashboardPage';
 import TransactionsPage from './features/transactions/TransactionsPage';
 import { AddTransactionDialog } from './features/transactions/AddTransaction';
@@ -26,6 +27,7 @@ import { $router } from './router';
 import { $isLoggedIn } from './features/sync/google';
 import { $importStatus } from './features/sync/state';
 import { $showAddTransactionPopup } from './features/transactions/state';
+import { $aspireSpreadSheetId } from './features/sync/aspire';
 
 declare module '@mui/material/styles' {
   interface TypeBackground {
@@ -44,6 +46,7 @@ const defaultTheme = createTheme({
 function Route() {
   const page = useStore($router);
   const isLoggedIn = useStore($isLoggedIn);
+  const spreadSheetId = useStore($aspireSpreadSheetId);
   const importStatus = useStore($importStatus);
 
   if (!page) {
@@ -52,6 +55,10 @@ function Route() {
 
   if (!isLoggedIn) {
     return <WelcomePage />;
+  }
+
+  if (!spreadSheetId) {
+    return <SelectSpreadSheetPage />;
   }
 
   if (importStatus === 'loading') {

@@ -16,6 +16,26 @@ export class GoogleSheetsApiError extends Error {
   }
 }
 
+export async function verifySpreadSheet(token: string, spreadsheetId: string) {
+  const resp = await fetch(
+    `${sheetsBaseURL}/${spreadsheetId}/values/BackendData!2:2`,
+    {
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const data = await resp.json();
+  if (!data || !data.values || !data.values.length) {
+    return false;
+  }
+
+  const version = data.values[0][data.values[0].length - 1];
+  return version === '3.2.0' || version === '3.3.0';
+}
+
 export class GoogleSheetsApi {
   protected token: string;
   protected spreadsheetId: string;

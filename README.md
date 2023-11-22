@@ -46,7 +46,7 @@ MVP:
 - [x] Allow transactions for "Available to budget", "Balance Adjustment", "Account Transfer"
 - [x] Add logo
 - [x] Clean-up for the initial version
-- [ ] Un-hardcode spreadsheet id
+- [x] Un-hardcode spreadsheet id
 
 Next version:
 
@@ -64,4 +64,8 @@ Some other version:
 - [ ] Reconsolidation support
 - [ ] Split transactions
 - [ ] Settings
+  - [ ] Language selector
+  - [ ] Currency selector
+  - [ ] Date formatter selector
+  - [ ] Ability to change spreadsheet
 - [ ] Auto data refresh => this would need import re-work to be able to match imported rows (by ids?) and what to do with newly added transactions?
