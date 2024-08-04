@@ -24,6 +24,8 @@ function toInteger(v?: unknown): number {
 }
 
 export class AspireBudget extends GoogleSheetsApi {
+  protected lastTxIndex = 0;
+
   async import(): Promise<ImportedData> {
     const [accounts, tmp, transactions, budgetTransactions] = await Promise.all(
       [
@@ -106,30 +108,40 @@ export class AspireBudget extends GoogleSheetsApi {
   // - without status
   // - available to budget as outflow
   protected async fetchTransactions(): Promise<Transaction[]> {
+    this.lastTxIndex = 9;
+
     const values = (await this.fetchValues(
       'Transactions',
-      '!B9:H'
+      `!B${this.lastTxIndex}:H`
     )) as unknown[][];
-
-    values.forEach((row) => {
-      if (!row[6]) {
-        console.warn(
-          `Row doesn't have state`,
-          row,
-          'date',
-          this.serialNumberToDate(row[0] as number)
-        );
-      }
-    });
 
     // each row looks like this
     // date         | Outflow | Inflow | Category | Account | Memo   | Status
     // serialNumber | number  | number | string   | string  | string | ✅ | 🅿️ | *️⃣
     return values
-      .filter((row) => row[6] === '✅' || row[6] === '🅿️')
       .map((row) => {
+        return [row, this.lastTxIndex++] as [unknown[], number];
+      })
+      .filter(([row]) => row[6] === '✅' || row[6] === '🅿️')
+      .map(([row, idx]) => {
+        if (!row[0]) {
+          console.warn(`Row ${idx} doesn't have date`, row);
+        }
+        if (row[6] !== '*️⃣' && !row[1] && !row[2]) {
+          console.warn(`Row ${idx} doesn't have amount`, row);
+        }
+        if (row[6] !== '*️⃣' && !row[3]) {
+          console.warn(`Row ${idx} doesn't have category`, row);
+        }
+        if (row[6] !== '*️⃣' && !row[4]) {
+          console.warn(`Row ${idx} doesn't have account`, row);
+        }
+        if (!row[6]) {
+          console.warn(`Row ${idx} doesn't have status`, row);
+        }
+
         return new Transaction(
-          'id',
+          `tx-${idx}`,
           this.serialNumberToDate(row[0] as number),
           toInteger(row[1] ? -row[1] : row[2] || 0),
           (row[3] as string) || '',
