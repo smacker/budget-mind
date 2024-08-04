@@ -10,7 +10,8 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { Locale } from 'date-fns';
 
 import NotFoundPage from './layout/NotFoundPage';
 import LoadingPage from './layout/LoadingPage';
@@ -96,7 +97,7 @@ function App() {
       const localeName = 'en-GB';
       try {
         const locale: { default: Locale } = await import(
-          `../node_modules/date-fns/locale/${localeName}`
+          `../node_modules/date-fns/locale/${localeName}.mjs`
         );
         setLocale(locale.default);
       } catch (e) {
