@@ -10,6 +10,11 @@ import ListItemText from '@mui/material/ListItemText';
 import Typography from '@mui/material/Typography';
 import { $accountSummary, $today } from './state';
 import { ColoredAmount } from '../../core/components/ColoredAmount';
+import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import { $showMakeTransferPopup } from '../transactions/state';
 
 function formatDistance(a: Date, b: Date) {
   if (isEqual(a, b)) {
@@ -36,9 +41,42 @@ export function AccountsSummary() {
               <ColoredAmount amount={account.amount} />
             </Typography>
           }
+          sx={{
+            '&:hover': {
+              '& .actions': {
+                opacity: 1,
+              },
+            },
+          }}
         >
           <ListItemText
-            primary={account.name}
+            primary={
+              <Box>
+                <Box component="span" sx={{ marginRight: '.2em' }}>
+                  {account.name}
+                </Box>
+                <Box
+                  className="actions"
+                  component="span"
+                  sx={{
+                    transition: (theme) => theme.transitions.create('opacity'),
+                    opacity: 0,
+                  }}
+                >
+                  <Tooltip title="Add transaction">
+                    <IconButton
+                      aria-label="add transaction"
+                      size="small"
+                      onClick={() =>
+                        $showMakeTransferPopup.set({ toAccount: account.name })
+                      }
+                    >
+                      <AddIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            }
             secondary={
               account.lastTransaction &&
               formatDistance(account.lastTransaction, today)

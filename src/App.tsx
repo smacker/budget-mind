@@ -27,8 +27,12 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { $router } from './router';
 import { $isLoggedIn } from './features/sync/google';
 import { $importStatus } from './features/sync/state';
-import { $showAddTransactionPopup } from './features/transactions/state';
+import {
+  $showAddTransactionPopup,
+  $showMakeTransferPopup,
+} from './features/transactions/state';
 import { $aspireSpreadSheetId } from './features/sync/aspire';
+import { MakeTransferDialog } from './features/transactions/MakeTransfer';
 
 declare module '@mui/material/styles' {
   interface TypeBackground {
@@ -82,9 +86,13 @@ function Route() {
 function App() {
   const isLoggedIn = useStore($isLoggedIn);
   const showAddTransactionPopup = useStore($showAddTransactionPopup);
+  const showMakeTransferPopup = useStore($showMakeTransferPopup);
   const [locale, setLocale] = useState<Locale | undefined>();
 
   useHotkeys('a', () => isLoggedIn && $showAddTransactionPopup.set({}), {
+    keyup: true,
+  });
+  useHotkeys('t', () => isLoggedIn && $showMakeTransferPopup.set({}), {
     keyup: true,
   });
 
@@ -123,6 +131,15 @@ function App() {
             onClose={() => $showAddTransactionPopup.set(false)}
             defaultValues={
               showAddTransactionPopup ? showAddTransactionPopup : undefined
+            }
+          />
+        ) : null}
+        {isLoggedIn ? (
+          <MakeTransferDialog
+            open={!!showMakeTransferPopup}
+            onClose={() => $showMakeTransferPopup.set(false)}
+            defaultValues={
+              showMakeTransferPopup ? showMakeTransferPopup : undefined
             }
           />
         ) : null}

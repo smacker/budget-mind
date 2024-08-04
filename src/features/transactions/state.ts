@@ -3,6 +3,7 @@ import {
   Transaction,
   BudgetTransaction,
   NewTransaction,
+  NewTransfer,
 } from '../../core/models';
 
 // Public (to be used by other components) state
@@ -14,6 +15,8 @@ export const $budgetTransactions = atom<BudgetTransaction[]>([]);
 export const $showAddTransactionPopup = atom<false | Partial<NewTransaction>>(
   false
 );
+
+export const $showMakeTransferPopup = atom<false | Partial<NewTransfer>>(false);
 
 export const addTransaction = action(
   $transactions,

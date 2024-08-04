@@ -37,6 +37,11 @@ export class Transaction {
 
 export type NewTransaction = Exclude<Transaction, 'id'>;
 
+export type NewTransfer = Exclude<Transaction, 'id' | 'status' | 'account'> & {
+  fromAccount: string;
+  toAccount: string;
+};
+
 export class BudgetTransaction {
   constructor(
     public date: Date,
