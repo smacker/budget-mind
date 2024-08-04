@@ -33,7 +33,7 @@ export default function DashboardPage() {
   return (
     <Main appBarChildren={<AppBar />}>
       <Box display="flex" flexDirection="row">
-        <Box flexGrow={1} ref={containerRef}>
+        <Box flexGrow={1} ref={containerRef} overflow="hidden">
           <Slide
             container={containerRef.current}
             direction={direction}
@@ -42,7 +42,7 @@ export default function DashboardPage() {
             mountOnEnter
             unmountOnExit
             key={selectedMonth}
-            timeout={500}
+            timeout={100}
           >
             <Box>
               <BudgetSummary />
