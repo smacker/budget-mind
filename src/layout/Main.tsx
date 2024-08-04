@@ -1,5 +1,5 @@
 import Box, { BoxProps } from '@mui/material/Box';
-import SearchAppBar from './AppBar';
+import AppBar from './AppBar';
 
 export default function Main({
   children,
@@ -12,7 +12,7 @@ export default function Main({
 }) {
   return (
     <Box flexGrow={1}>
-      {appBarChildren ? <SearchAppBar>{appBarChildren}</SearchAppBar> : null}
+      {appBarChildren ? <AppBar>{appBarChildren}</AppBar> : null}
       <Box
         component="main"
         flexGrow={1}

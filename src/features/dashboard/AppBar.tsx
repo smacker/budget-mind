@@ -16,12 +16,17 @@ export default function AppBar() {
   const selectedMonth = useStore($selectedMonth);
 
   return (
-    <Box display="flex" flexGrow={1} fontWeight="bold">
+    <Box
+      display="flex"
+      flexGrow={1}
+      fontWeight="bold"
+      justifyContent="space-between"
+    >
       <Typography
         fontWeight="bold"
         marginRight={1}
         fontSize="1.5em"
-        padding="5px 16px"
+        padding="5px 0"
       >
         {selectedMonth.getFullYear()}
       </Typography>
