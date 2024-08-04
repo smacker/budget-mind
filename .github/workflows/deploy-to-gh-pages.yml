@@ -33,6 +33,8 @@ jobs:
         run: pnpm install
 
       - name: Build
+        env:
+          VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
         run: pnpm build --base=/budget-mind/
 
       - name: Upload artifact
