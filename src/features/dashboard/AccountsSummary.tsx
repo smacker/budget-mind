@@ -14,7 +14,11 @@ import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
-import { $showMakeTransferPopup } from '../transactions/state';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import {
+  $showAddTransactionPopup,
+  $showMakeTransferPopup,
+} from '../transactions/state';
 
 function formatDistance(a: Date, b: Date) {
   if (isEqual(a, b)) {
@@ -50,10 +54,12 @@ export function AccountsSummary() {
           }}
         >
           <ListItemText
-            primary={
-              <Box>
+            primary={account.name}
+            secondary={
+              <Box component="span">
                 <Box component="span" sx={{ marginRight: '.2em' }}>
-                  {account.name}
+                  {account.lastTransaction &&
+                    formatDistance(account.lastTransaction, today)}
                 </Box>
                 <Box
                   className="actions"
@@ -68,18 +74,25 @@ export function AccountsSummary() {
                       aria-label="add transaction"
                       size="small"
                       onClick={() =>
-                        $showMakeTransferPopup.set({ toAccount: account.name })
+                        $showAddTransactionPopup.set({ account: account.name })
                       }
                     >
                       <AddIcon fontSize="inherit" />
                     </IconButton>
                   </Tooltip>
+                  <Tooltip title="Make transfer">
+                    <IconButton
+                      aria-label="make transfer"
+                      size="small"
+                      onClick={() =>
+                        $showMakeTransferPopup.set({ toAccount: account.name })
+                      }
+                    >
+                      <SwapHorizIcon fontSize="inherit" />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </Box>
-            }
-            secondary={
-              account.lastTransaction &&
-              formatDistance(account.lastTransaction, today)
             }
           />
         </ListItem>
