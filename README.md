@@ -16,9 +16,9 @@ https://app.actualbudget.com/budget
 
 #### Main libraries in use:
 
-MUI: https://mui.com/material-ui/react-text-field/
-Nanostores: https://github.com/nanostores/nanostores
-Date-fns: https://date-fns.org/v2.30.0/docs/isSameDay
+- MUI: https://mui.com/material-ui/
+- Nanostores: https://github.com/nanostores/nanostores
+- Date-fns: https://date-fns.org
 
 #### CSS guides:
 
