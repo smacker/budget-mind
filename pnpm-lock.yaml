@@ -27,20 +27,20 @@ importers:
         specifier: ^7.12.0
         version: 7.12.0(@emotion/react@11.11.1(@types/react@18.2.31)(react@18.3.1))(@emotion/styled@11.11.0(@emotion/react@11.11.1(@types/react@18.2.31)(react@18.3.1))(@types/react@18.2.31)(react@18.3.1))(@mui/material@5.16.6(@emotion/react@11.11.1(@types/react@18.2.31)(react@18.3.1))(@emotion/styled@11.11.0(@emotion/react@11.11.1(@types/react@18.2.31)(react@18.3.1))(@types/react@18.2.31)(react@18.3.1))(@types/react@18.2.31)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(@types/react@18.2.31)(date-fns@3.6.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@nanostores/persistent':
-        specifier: ^0.9.1
-        version: 0.9.1(nanostores@0.9.4)
+        specifier: ^0.10.2
+        version: 0.10.2(nanostores@0.11.0)
       '@nanostores/react':
-        specifier: ^0.7.1
-        version: 0.7.1(nanostores@0.9.4)(react@18.3.1)
+        specifier: ^0.7.3
+        version: 0.7.3(nanostores@0.11.0)(react@18.3.1)
       '@nanostores/router':
-        specifier: ^0.11.0
-        version: 0.11.0(nanostores@0.9.4)
+        specifier: ^0.15.1
+        version: 0.15.1(nanostores@0.11.0)
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
       nanostores:
-        specifier: ^0.9.4
-        version: 0.9.4
+        specifier: ^0.11.0
+        version: 0.11.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -612,24 +612,24 @@ packages:
       moment-jalaali:
         optional: true
 
-  '@nanostores/persistent@0.9.1':
-    resolution: {integrity: sha512-ow57Hxm5VMaI5GHET/cVk8hX/iKMmbhcGrB9owfN8p8OHiiJgUlYxe1giacwlAALJXAh2t8bxXh42hHb64BCEA==}
-    engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
+  '@nanostores/persistent@0.10.2':
+    resolution: {integrity: sha512-BEndnLhRC+yP7gXTESepBbSj8XNl8OXK9hu4xAgKC7MWJHKXnEqJMqY47LUyHxK6vYgFnisyHmqq+vq8AUFyIg==}
+    engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
-      nanostores: ^0.9.0
+      nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0
 
-  '@nanostores/react@0.7.1':
-    resolution: {integrity: sha512-EXQg9N4MdI4eJQz/AZLIx3hxQ6BuBmV4Q55bCd5YCSgEOAW7tGTsIZxpRXxvxLXzflNvHTBvfrDNY38TlSVBkQ==}
-    engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
+  '@nanostores/react@0.7.3':
+    resolution: {integrity: sha512-/XuLAMENRu/Q71biW4AZ4qmU070vkZgiQ28gaTSNRPm2SZF5zGAR81zPE1MaMB4SeOp6ZTst92NBaG75XSspNg==}
+    engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
-      nanostores: ^0.9.0
+      nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0
       react: '>=18.0.0'
 
-  '@nanostores/router@0.11.0':
-    resolution: {integrity: sha512-QlcneDqXVIsQL3agOS59d9gJQ/9M3qyVOWVttARL5Xvpmovtq91oOYcQxKbLq9i7iitGs5yDJmabe/O3QjWddQ==}
-    engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
+  '@nanostores/router@0.15.1':
+    resolution: {integrity: sha512-uEDiHPjkHGSrqEE4NRuqOLepR6lFmfLQ90c4sLLvwSNiWTY3MxejkD7tALmpj9cN4fmLnqt54r51tCNEHJL+mw==}
+    engines: {node: ^18.0.0 || >=20.0.0}
     peerDependencies:
-      nanostores: ^0.9.0
+      nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1255,9 +1255,9 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
-  nanostores@0.9.4:
-    resolution: {integrity: sha512-BVFzKt6K5P8tYQLL7MItqcev7jpspA5pIjv+Ck3k6wBnUlwCJcpkGTIinj4APvx8SvdP9fXDGoMRCTY6DO/9QA==}
-    engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
+  nanostores@0.11.0:
+    resolution: {integrity: sha512-fT2u3vmWmUt93G9dmUgpnbs3AAYJb6lzu7KrJ1FdC/rjFopGiboS3bfKYv6NNkuY6g6eiRakTR48wKSL/F5C+g==}
+    engines: {node: ^18.0.0 || >=20.0.0}
 
   natural-compare-lite@1.4.0:
     resolution: {integrity: sha512-Tj+HTDSJJKaZnfiuw+iaF9skdPpTo2GtEly5JHnWV/hfv2Qj/9RKsGISQtLh2ox3l5EAGw487hnBee0sIJ6v2g==}
@@ -2059,18 +2059,18 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@nanostores/persistent@0.9.1(nanostores@0.9.4)':
+  '@nanostores/persistent@0.10.2(nanostores@0.11.0)':
     dependencies:
-      nanostores: 0.9.4
+      nanostores: 0.11.0
 
-  '@nanostores/react@0.7.1(nanostores@0.9.4)(react@18.3.1)':
+  '@nanostores/react@0.7.3(nanostores@0.11.0)(react@18.3.1)':
     dependencies:
-      nanostores: 0.9.4
+      nanostores: 0.11.0
       react: 18.3.1
 
-  '@nanostores/router@0.11.0(nanostores@0.9.4)':
+  '@nanostores/router@0.15.1(nanostores@0.11.0)':
     dependencies:
-      nanostores: 0.9.4
+      nanostores: 0.11.0
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -2717,7 +2717,7 @@ snapshots:
 
   nanoid@3.3.7: {}
 
-  nanostores@0.9.4: {}
+  nanostores@0.11.0: {}
 
   natural-compare-lite@1.4.0: {}
 

@@ -1,11 +1,7 @@
-import { task, computed, onAction } from 'nanostores';
+import { task, computed } from 'nanostores';
 import { importData } from './importer';
 import { AspireBudget } from '../../infra/storage/aspire/client';
 import { BudgetTransaction, Transaction } from '../../core/models';
-import {
-  $budgetTransactions,
-  $transactions,
-} from '../../features/transactions/state';
 import { $token, logout } from './google';
 import {
   GoogleSheetsApiError,
@@ -94,28 +90,34 @@ $aspireClient.subscribe((client) => {
   prevAspireValue = client;
 });
 
-// Auto submit new transactions to Aspire
+// Submit new transactions to Aspire
 
-onAction($transactions, async ({ actionName, args }): Promise<void> => {
-  if (actionName === 'addTransaction') {
-    const client = $aspireClient.get();
-    if (!client) {
-      return;
-    }
-
-    const data = args[0] as Transaction;
-    return client.addTransaction(data);
+export const addAspireTransaction = async (
+  transaction: Transaction
+): Promise<void> => {
+  const client = $aspireClient.get();
+  if (!client) {
+    console.error({
+      error: 'No client, transaction not added',
+      transaction,
+    });
+    return;
   }
-});
 
-onAction($budgetTransactions, async ({ actionName, args }): Promise<void> => {
-  if (actionName === 'addBudgetTransaction') {
-    const client = $aspireClient.get();
-    if (!client) {
-      return;
-    }
+  return client.addTransaction(transaction);
+};
 
-    const data = args[0] as BudgetTransaction;
-    return client.addBudgetTransaction(data);
+export const addAspireBudgetTransaction = async (
+  transaction: BudgetTransaction
+): Promise<void> => {
+  const client = $aspireClient.get();
+  if (!client) {
+    console.error({
+      error: 'No client, budget transaction not added',
+      transaction,
+    });
+    return;
   }
-});
+
+  return client.addBudgetTransaction(transaction);
+};

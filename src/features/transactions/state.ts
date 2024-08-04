@@ -1,10 +1,14 @@
-import { atom, computed, action } from 'nanostores';
+import { atom, computed } from 'nanostores';
 import {
   Transaction,
   BudgetTransaction,
   NewTransaction,
   NewTransfer,
 } from '../../core/models';
+import {
+  addAspireBudgetTransaction,
+  addAspireTransaction,
+} from '../sync/aspire';
 
 // Public (to be used by other components) state
 
@@ -18,21 +22,19 @@ export const $showAddTransactionPopup = atom<false | Partial<NewTransaction>>(
 
 export const $showMakeTransferPopup = atom<false | Partial<NewTransfer>>(false);
 
-export const addTransaction = action(
-  $transactions,
-  'addTransaction',
-  async (store, transaction: Transaction): Promise<void> => {
-    store.set([...store.get(), transaction]);
-  }
-);
+export const addTransaction = async (
+  transaction: Transaction
+): Promise<void> => {
+  $transactions.set([...$transactions.get(), transaction]);
+  return addAspireTransaction(transaction);
+};
 
-export const addBudgetTransaction = action(
-  $budgetTransactions,
-  'addBudgetTransaction',
-  async (store, tx: BudgetTransaction): Promise<void> => {
-    store.set([...store.get(), tx]);
-  }
-);
+export const addBudgetTransaction = async (
+  tx: BudgetTransaction
+): Promise<void> => {
+  $budgetTransactions.set([...$budgetTransactions.get(), tx]);
+  return addAspireBudgetTransaction(tx);
+};
 
 // State scoped for the feature itself
 
@@ -96,19 +98,18 @@ export type Condition =
 
 export const $conditions = atom<Condition[]>([]);
 
-export const addCondition = action(
-  $conditions,
-  'add',
-  (store, value: Condition) => {
-    store.set([...store.get(), value]);
-    return store.get();
-  }
-);
+export const addCondition = (value: Condition) => {
+  $conditions.set([...$conditions.get(), value]);
+  return $conditions.get();
+};
 
-export const removeCondition = action($conditions, 'remove', (store, index) => {
-  store.set([...store.get().slice(0, index), ...store.get().slice(index + 1)]);
-  return store.get();
-});
+export const removeCondition = (index: number) => {
+  $conditions.set([
+    ...$conditions.get().slice(0, index),
+    ...$conditions.get().slice(index + 1),
+  ]);
+  return $conditions.get();
+};
 
 export interface TransactionTableItem extends Transaction {
   outflow?: number;
