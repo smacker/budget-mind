@@ -23,6 +23,13 @@ export const $selectedMonthLastDay = computed(
   (selectedMonth) => endOfMonth(selectedMonth)
 );
 
+export const $availableYears = computed($transactions, (transactions) => {
+  const years = new Set(transactions.map((tx) => tx.date.getFullYear()));
+  years.add(new Date().getFullYear());
+  years.add(new Date().getFullYear() + 1);
+  return Array.from(years);
+});
+
 export interface DashboardTableItem {
   type: 'group' | 'category';
   name: string;

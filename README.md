@@ -54,7 +54,7 @@ Next version:
 - [x] Category transfers
 - [ ] Add filter by month in the list of transactions
 - [ ] Quick search in transaction
-- [ ] Find a good UI/UX solution to change year on dashboard
+- [x] Find a good UI/UX solution to change year on dashboard
 
 Some other version:
 
