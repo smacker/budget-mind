@@ -26,8 +26,13 @@ import {
   $importStatus,
   $spreadsheets,
   $spreadSheetId,
-  $spreadSheetIdStatus,
 } from '../../features/sync/state';
+import { $token, $isLoggedIn, $readyToLogin } from '../../features/sync/google';
+import {
+  $spreadSheetIdIsValidating,
+  $spreadSheetIdStatus,
+  $aspireSpreadSheetId,
+} from '../../features/sync/aspire';
 
 logger({
   // Core
@@ -53,5 +58,12 @@ logger({
   ImportStatus: $importStatus,
   Spreadsheets: $spreadsheets,
   SpreadSheetId: $spreadSheetId,
+  // Sync Google
+  Token: $token,
+  IsLoggedIn: $isLoggedIn,
+  ReadyToLogin: $readyToLogin,
+  // Sync Aspire
+  SpreadSheetIdIsValidating: $spreadSheetIdIsValidating,
   SpreadSheetIdStatus: $spreadSheetIdStatus,
+  AspireSpreadSheetId: $aspireSpreadSheetId,
 });

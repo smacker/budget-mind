@@ -1,13 +1,13 @@
-import { task, computed } from 'nanostores';
+import { task, computed, atom } from 'nanostores';
 import { importData } from './importer';
 import { AspireBudget } from '../../infra/storage/aspire/client';
 import { BudgetTransaction, Transaction } from '../../core/models';
-import { $token, logout } from './google';
+import { $isLoggedIn, $token, logout } from './google';
 import {
   GoogleSheetsApiError,
   verifySpreadSheet,
 } from '../../infra/storage/aspire/gsheet-api';
-import { $spreadSheetId, $spreadSheetIdStatus } from './state';
+import { $spreadSheetId } from './state';
 
 async function safeImportData(client: Readonly<AspireBudget>) {
   try {
@@ -24,36 +24,37 @@ async function safeImportData(client: Readonly<AspireBudget>) {
 
 // Spreadsheet id
 
-// we need to reset spreadsheet status on id change and validate the new id
-let prevSpreadSheetId = '';
-$spreadSheetId.subscribe((id) => {
-  if (prevSpreadSheetId !== id) {
-    $spreadSheetIdStatus.set('validating');
+export const $spreadSheetIdIsValidating = atom(false);
+export const $spreadSheetIdStatus = computed(
+  [$isLoggedIn, $spreadSheetId],
+  (isLoggedIn, sheetId) =>
+    task(async () => {
+      if (!isLoggedIn || !sheetId) {
+        return 'unknown';
+      }
 
-    const token = $token.get();
-    if (token) {
-      task(async () => {
-        let isValid = false;
-        try {
-          isValid = await verifySpreadSheet(token, id);
-        } catch (e) {
-          console.log(e);
-        }
-        if (isValid) {
-          $spreadSheetIdStatus.set('valid');
-        } else {
-          $spreadSheetIdStatus.set('error');
-        }
-      });
-    }
-  }
-  prevSpreadSheetId = id;
-});
+      const token = $token.get();
+      // if we logged in we must have a token
+      if (!token) {
+        throw new Error('No token');
+      }
+
+      let isValid = false;
+      $spreadSheetIdIsValidating.set(true);
+      try {
+        isValid = await verifySpreadSheet(token, sheetId);
+      } catch (e) {
+        console.log(e);
+      }
+      $spreadSheetIdIsValidating.set(false);
+      return isValid ? 'valid' : 'error';
+    })
+);
 
 export const $aspireSpreadSheetId = computed(
-  [$token, $spreadSheetIdStatus, $spreadSheetId],
-  (token, spreadSheetIdStatus, spreadSheetId) => {
-    if (!token) return null;
+  [$spreadSheetIdIsValidating, $spreadSheetIdStatus, $spreadSheetId],
+  (spreadSheetIdIsValidating, spreadSheetIdStatus, spreadSheetId) => {
+    if (spreadSheetIdIsValidating) return null;
     if (spreadSheetIdStatus !== 'valid') return null;
 
     return spreadSheetId;

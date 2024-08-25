@@ -11,13 +11,9 @@ import { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 
 import Main from '../../layout/Main';
-import {
-  $spreadSheetId,
-  $spreadSheetIdStatus,
-  $spreadsheets,
-  loadSpreadsheets,
-} from './state';
+import { $spreadSheetId, $spreadsheets, loadSpreadsheets } from './state';
 import { $token } from './google';
+import { $spreadSheetIdIsValidating, $spreadSheetIdStatus } from './aspire';
 
 function SelectSpreadSheetAppBar() {
   return (
@@ -55,6 +51,7 @@ function SpreadsheetSelector() {
 
 export default function SelectSpreadSheetPage() {
   const spreadSheetStatus = useStore($spreadSheetIdStatus);
+  const spreadSheetIdIsValidating = useStore($spreadSheetIdIsValidating);
 
   return (
     <Main appBarChildren={<SelectSpreadSheetAppBar />}>
@@ -64,12 +61,12 @@ export default function SelectSpreadSheetPage() {
           and try again
         </Alert>
       ) : null}
-      {spreadSheetStatus === 'unknown' || spreadSheetStatus === 'error' ? (
-        <SpreadsheetSelector />
-      ) : (
+      {spreadSheetIdIsValidating ? (
         <Box sx={{ paddingTop: 6, textAlign: 'center' }}>
           <CircularProgress />
         </Box>
+      ) : (
+        <SpreadsheetSelector />
       )}
     </Main>
   );

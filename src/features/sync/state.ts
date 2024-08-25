@@ -18,7 +18,6 @@ export async function loadSpreadsheets(token: string) {
   $spreadsheets.set(files);
 }
 
-type SpreadsheetStatus = 'unknown' | 'validating' | 'valid' | 'error';
-
+// this is is selected by the user and might be invalid
+// use $aspireSpreadSheetId instead everywhere expect sheet selector
 export const $spreadSheetId = persistentAtom<string>('aspireSpreadsheetId', '');
-export const $spreadSheetIdStatus = atom<SpreadsheetStatus>('unknown');
