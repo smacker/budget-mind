@@ -212,6 +212,12 @@ export function AddTransactionDialog({
             {...register('memo')}
             error={!!errors.memo}
             helperText={errors.memo?.message}
+            // Shortcut to submit after entering memo by pressing Enter
+            onKeyUp={(e) => {
+              if (e.key === 'Enter') {
+                handleSubmit(onSubmit)();
+              }
+            }}
           />
           <Box textAlign="right">
             <Controller
@@ -237,7 +243,9 @@ export function AddTransactionDialog({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
-        <Button onClick={handleSubmit(onSubmit)}>Add</Button>
+        <Button onClick={handleSubmit(onSubmit)} type="submit">
+          Add
+        </Button>
       </DialogActions>
     </Dialog>
   );
