@@ -12,7 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@fontsource/roboto": "^5.0.8",
+    "@fontsource/roboto": "^5.1.0",
     "@mui/icons-material": "^6.1.5",
     "@mui/material": "^6.1.5",
     "@mui/x-date-pickers": "^7.22.0",
@@ -20,26 +20,26 @@
     "@nanostores/persistent": "^0.10.2",
     "@nanostores/react": "^0.8.0",
     "@nanostores/router": "^0.16.1",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.1.0",
     "nanostores": "^0.11.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.52.2",
-    "react-hotkeys-hook": "^4.5.0",
-    "react-virtuoso": "^4.9.0"
+    "react-hook-form": "^7.53.1",
+    "react-hotkeys-hook": "^4.5.1",
+    "react-virtuoso": "^4.12.0"
   },
   "devDependencies": {
-    "@types/gapi": "^0.0.46",
-    "@types/google.accounts": "^0.0.13",
-    "@types/react": "^18.2.31",
-    "@types/react-dom": "^18.2.14",
+    "@types/gapi": "^0.0.47",
+    "@types/google.accounts": "^0.0.15",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
     "eslint": "^8.38.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
-    "typescript": "^5.5.4",
-    "vite": "^5.3.5"
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
   }
 }
