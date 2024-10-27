@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import { useStore } from '@nanostores/react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -69,7 +69,9 @@ const VirtuosoTableComponents: TableComponents<TransactionTableItem> = {
       sx={{ borderCollapse: 'separate', tableLayout: 'fixed' }}
     />
   ),
-  TableHead,
+  TableHead: forwardRef((props: ComponentPropsWithoutRef<'thead'>, ref) => (
+    <TableHead ref={ref} {...props} />
+  )),
   TableRow: ({ item: _item, ...props }) => <TableRow hover {...props} />,
   TableBody: forwardRef<HTMLTableSectionElement>((props, ref) => (
     <TableBody {...props} ref={ref} />
