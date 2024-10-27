@@ -70,6 +70,7 @@ export type Operator =
 export type DateCondition = {
   field: DateField;
   operator: DateOperator;
+  type: 'date' | 'month' | 'year';
   value: Date;
 };
 
@@ -130,14 +131,30 @@ export const $processedTransactions = computed(
             case 'is': {
               let txValue = transaction[condition.field];
               let condValue = condition.value;
-              if (txValue instanceof Date) {
-                txValue = txValue.getTime();
-              }
-              if (condValue instanceof Date) {
-                condValue = condValue.getTime();
-              }
               if (typeof condValue === 'number') {
                 condValue *= 100;
+              }
+              // if one of the values is a date, the other should be a date too
+              if (
+                txValue instanceof Date &&
+                condValue instanceof Date &&
+                'type' in condition
+              ) {
+                switch (condition.type) {
+                  case 'date':
+                    txValue = txValue.getTime();
+                    condValue = condValue.getTime();
+                    break;
+                  case 'month':
+                    txValue = txValue.getMonth() + '/' + txValue.getFullYear();
+                    condValue =
+                      condValue.getMonth() + '/' + condValue.getFullYear();
+                    break;
+                  case 'year':
+                    txValue = new Date(txValue).getFullYear();
+                    condValue = new Date(condValue).getFullYear();
+                    break;
+                }
               }
               if (txValue !== condValue) return false;
               break;

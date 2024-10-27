@@ -5,6 +5,8 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 import { useCallback, useState } from 'react';
 import {
   StringCondition,
@@ -50,6 +52,12 @@ const inputStyles = {
   sx: { width: 250, marginBottom: '10px' },
 } as const;
 
+const typeToViews = {
+  date: ['year', 'month', 'day'],
+  month: ['year', 'month'],
+  year: ['year'],
+} as const;
+
 export function DateFilterBox({
   field,
   onApply,
@@ -57,29 +65,47 @@ export function DateFilterBox({
   field: DateField;
   onApply: (condition: DateCondition) => void;
 }) {
-  const [selectedType, setSelectedType] = useState<DateOperator>('is');
+  const [selectedType, setSelectedType] = useState<'date' | 'month' | 'year'>(
+    'date'
+  );
+  const [selectedOp, setSelectedOp] = useState<DateOperator>('is');
   const [value, setValue] = useState<Date | null>(null);
 
   const onSubmit = useCallback(
-    () => value && onApply({ field, operator: selectedType, value }),
-    [onApply, field, selectedType, value]
+    () =>
+      value &&
+      onApply({ field, operator: selectedOp, type: selectedType, value }),
+    [onApply, field, selectedOp, selectedType, value]
   );
 
   return (
     <Paper sx={{ padding: '10px' }}>
       <Box sx={{ marginBottom: '10px' }}>
+        <ToggleButtonGroup
+          size="small"
+          exclusive
+          value={selectedType}
+          onChange={(_, v) => setSelectedType(v)}
+        >
+          <ToggleButton value="date">Date</ToggleButton>
+          <ToggleButton value="month">Month</ToggleButton>
+          <ToggleButton value="year">Year</ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+      <Box sx={{ marginBottom: '10px' }}>
         {dateOperators.map((type) => (
           <ConditionChip
             key={type}
             type={type}
-            currentType={selectedType}
-            onClick={() => setSelectedType(type)}
+            currentType={selectedOp}
+            onClick={() => setSelectedOp(type)}
           />
         ))}
       </Box>
       <DatePicker
         value={value}
         onChange={setValue}
+        views={typeToViews[selectedType]}
         slotProps={{
           textField: {
             InputProps: inputStyles,

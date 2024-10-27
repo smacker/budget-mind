@@ -1,13 +1,19 @@
 import { useStore } from '@nanostores/react';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import { format } from 'date-fns';
 import { $conditions, Condition, removeCondition } from './state';
 
 function makeLabel(condition: Condition) {
   let value = condition.value;
   if (value instanceof Date) {
-    // TODO: locale from settings
-    value = Intl.DateTimeFormat('en-UK', {}).format(value);
+    if ('type' in condition && condition.type === 'month') {
+      value = format(value, 'MMMM yyyy');
+    } else if ('type' in condition && condition.type === 'year') {
+      value = format(value, 'yyyy');
+    } else {
+      value = Intl.DateTimeFormat('en-UK', {}).format(value);
+    }
   }
 
   return (
