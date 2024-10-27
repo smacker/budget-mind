@@ -77,7 +77,15 @@ export function DateFilterBox({
           />
         ))}
       </Box>
-      <DatePicker value={value} onChange={setValue} {...inputStyles} />
+      <DatePicker
+        value={value}
+        onChange={setValue}
+        slotProps={{
+          textField: {
+            InputProps: inputStyles,
+          },
+        }}
+      />
       <Box textAlign="right">
         <Button size="small" onClick={onSubmit}>
           Apply
