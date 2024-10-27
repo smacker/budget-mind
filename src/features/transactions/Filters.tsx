@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box';
+import Box, { BoxProps } from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
@@ -35,7 +35,7 @@ function getOptionsStore(field: string) {
   return;
 }
 
-export function Filters() {
+export function Filters(props: BoxProps) {
   const [currentFilter, setCurrentFilter] = useState<FilterState | null>(null);
 
   const handleFilterClick = (
@@ -97,11 +97,11 @@ export function Filters() {
   }
 
   return (
-    <Box>
+    <Box {...props}>
       <Box display="flex" flexDirection="row" alignItems="center">
         <ClickAwayListener onClickAway={() => setCurrentFilter(null)}>
           <Box>
-            <ButtonGroup size="small">
+            <ButtonGroup>
               <Button onClick={(e) => handleFilterClick(e, 'date')}>
                 Date
               </Button>

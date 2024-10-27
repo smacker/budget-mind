@@ -9,6 +9,7 @@ import {
   addAspireBudgetTransaction,
   addAspireTransaction,
 } from '../sync/aspire';
+import { currencyNumberFormat } from '../../core/formatters';
 
 // Public (to be used by other components) state
 
@@ -111,13 +112,15 @@ export const removeCondition = (index: number) => {
   return $conditions.get();
 };
 
+export const $quickSearch = atom('');
+
 export interface TransactionTableItem extends Transaction {
   outflow?: number;
   inflow?: number;
 }
 
 export const $processedTransactions = computed(
-  [$transactions, $conditions],
+  [$transactions, $conditions, $quickSearch],
   (transactions, conditions) => {
     transactions = transactions
       .filter((transaction) => {
@@ -172,6 +175,18 @@ export const $processedTransactions = computed(
           }
         }
         return true;
+      })
+      .filter((transaction) => {
+        const search = $quickSearch.get().toLowerCase();
+        if (!search) return true;
+        return Object.values(transaction).some((value) =>
+          (typeof value === 'number'
+            ? currencyNumberFormat(value / 100)
+            : value.toString()
+          )
+            .toLowerCase()
+            .includes(search)
+        );
       })
       .map((transaction) => ({
         ...transaction,

@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import QuickSearch from './QuickSearch';
 import { Filters } from './Filters';
 import { SelectedConditions } from './SelectedConditions';
 import { TransactionsTable } from './TransactionsTable';
@@ -10,19 +10,8 @@ import { useStore } from '@nanostores/react';
 function TransactionsAppBar() {
   return (
     <Box display="flex" alignItems="center">
-      <Typography
-        variant="h5"
-        noWrap
-        component="div"
-        sx={{
-          fontWeight: 'bold',
-          color: '#A3A3A3',
-          marginRight: 1,
-        }}
-      >
-        Filter transaction by
-      </Typography>
-      <Filters />
+      <Filters flex={1} />
+      <QuickSearch />
     </Box>
   );
 }
