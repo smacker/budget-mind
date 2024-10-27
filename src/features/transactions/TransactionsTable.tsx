@@ -70,7 +70,7 @@ const VirtuosoTableComponents: TableComponents<TransactionTableItem> = {
     />
   ),
   TableHead,
-  TableRow: ({ item: _item, ...props }) => <TableRow {...props} />,
+  TableRow: ({ item: _item, ...props }) => <TableRow hover {...props} />,
   TableBody: forwardRef<HTMLTableSectionElement>((props, ref) => (
     <TableBody {...props} ref={ref} />
   )),
