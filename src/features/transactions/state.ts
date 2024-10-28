@@ -17,9 +17,9 @@ export const $transactions = atom<Transaction[]>([]);
 
 export const $budgetTransactions = atom<BudgetTransaction[]>([]);
 
-export const $showAddTransactionPopup = atom<false | Partial<NewTransaction>>(
-  false
-);
+export const $showAddTransactionPopup = atom<
+  false | (Partial<NewTransaction> & { inflow?: boolean })
+>(false);
 
 export const $showMakeTransferPopup = atom<false | Partial<NewTransfer>>(false);
 

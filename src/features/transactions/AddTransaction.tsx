@@ -23,7 +23,7 @@ export function AddTransactionDialog({
 }: {
   open: boolean;
   onClose: () => void;
-  defaultValues?: Partial<NewTransaction>;
+  defaultValues?: Partial<NewTransaction> & { inflow?: boolean };
 }) {
   const accounts = useStore($accounts);
   const categories = useStore($categories);
@@ -33,6 +33,7 @@ export function AddTransactionDialog({
     d.setHours(0, 0, 0, 0);
     return d;
   }, []);
+
   const [isInflow, setIsInflow] = useState<boolean>(false);
 
   const defaultValues = useMemo(
@@ -58,7 +59,7 @@ export function AddTransactionDialog({
     if (!open) return;
 
     reset(defaultValues);
-    setIsInflow(false);
+    setIsInflow(defaultValues?.inflow || false);
   }, [reset, defaultValues, open]);
 
   const onSubmit = (data: NewTransaction) => {

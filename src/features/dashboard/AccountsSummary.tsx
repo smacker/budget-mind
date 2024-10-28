@@ -74,7 +74,10 @@ export function AccountsSummary() {
                       aria-label="add transaction"
                       size="small"
                       onClick={() =>
-                        $showAddTransactionPopup.set({ account: account.name })
+                        $showAddTransactionPopup.set({
+                          account: account.name,
+                          inflow: true,
+                        })
                       }
                     >
                       <AddIcon fontSize="inherit" />
