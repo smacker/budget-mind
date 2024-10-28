@@ -144,6 +144,8 @@ export function AddTransactionDialog({
               <DatePicker
                 value={field.value}
                 onChange={(e) => field.onChange(e || today)}
+                /* FIXME: this should be coming from locale */
+                format="dd/MM/yyyy"
                 slotProps={{
                   textField: {
                     fullWidth: true,
