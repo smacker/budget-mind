@@ -81,7 +81,8 @@ export function BudgetedInput({
 
   // keep focused state in sync with popup
   useEffect(() => {
-    setPopupOpen(focused);
+    // add a small delay to prevent the popup from closing when clicking on it
+    setTimeout(() => setPopupOpen(focused), 100);
   }, [focused]);
 
   const handleOnFocus = useCallback(() => {
