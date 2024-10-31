@@ -1,5 +1,6 @@
 import { ComponentPropsWithoutRef, forwardRef } from 'react';
 import { useStore } from '@nanostores/react';
+
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,8 +9,13 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { TableVirtuoso, TableComponents } from 'react-virtuoso';
 
-import { TransactionTableItem, $processedTransactions } from './state';
-import { Amount } from '../../core/components/Amount';
+import EditableTableCell from './EditableTableCell';
+
+import {
+  TransactionTableItem,
+  $processedTransactions,
+  updateTransaction,
+} from './state';
 
 interface ColumnData {
   dataKey: keyof TransactionTableItem;
@@ -102,27 +108,20 @@ function rowContent(_index: number, row: TransactionTableItem) {
   return (
     <>
       {columns.map((column) => {
-        let value: any = row[column.dataKey];
-        if (typeof value === 'object') {
-          value = Intl.DateTimeFormat('en-UK', {}).format(value);
-        }
-        if (column.dataKey === 'status') {
-          value = value === 'settled' ? '✅' : '🅿️';
-        }
-        if (column.dataKey === 'outflow' && value) {
-          value = <Amount amount={-value} textColor="red" />;
-        }
-        if (column.dataKey === 'inflow' && value) {
-          value = <Amount amount={value} textColor="green" />;
-        }
-
         return (
-          <TableCell
+          <EditableTableCell
             key={column.dataKey}
             align={column.numeric || false ? 'right' : 'left'}
-          >
-            {value}
-          </TableCell>
+            value={row[column.dataKey]}
+            column={column}
+            onChange={(v) => {
+              let key = column.dataKey;
+              if (key === 'outflow' || key === 'inflow') {
+                key = 'amount';
+              }
+              updateTransaction({ ...row, [key]: v });
+            }}
+          />
         );
       })}
     </>

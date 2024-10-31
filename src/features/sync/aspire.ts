@@ -95,14 +95,14 @@ $aspireClient.subscribe((client) => {
 
 export const addAspireTransaction = async (
   transaction: Transaction
-): Promise<void> => {
+): Promise<string> => {
   const client = $aspireClient.get();
   if (!client) {
     console.error({
       error: 'No client, transaction not added',
       transaction,
     });
-    return;
+    throw new Error('No client');
   }
 
   return client.addTransaction(transaction);
@@ -121,4 +121,19 @@ export const addAspireBudgetTransaction = async (
   }
 
   return client.addBudgetTransaction(transaction);
+};
+
+export const updateAspireTransaction = async (
+  transaction: Transaction
+): Promise<void> => {
+  const client = $aspireClient.get();
+  if (!client) {
+    console.error({
+      error: 'No client, transaction not updated',
+      transaction,
+    });
+    return;
+  }
+
+  return client.updateTransaction(transaction);
 };

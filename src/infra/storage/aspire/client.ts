@@ -47,9 +47,9 @@ export class AspireBudget extends GoogleSheetsApi {
     };
   }
 
-  async addTransaction(data: Transaction): Promise<void> {
+  protected txToBody(data: Transaction) {
     const inflow = data.amount >= 0;
-    const body = {
+    return {
       majorDimension: 'ROWS',
       values: [
         [
@@ -63,6 +63,10 @@ export class AspireBudget extends GoogleSheetsApi {
         ],
       ],
     };
+  }
+
+  async addTransaction(data: Transaction): Promise<string> {
+    const body = this.txToBody(data);
 
     const resp = await this.fetch(
       `/values/Transactions!B:H:append?valueInputOption=USER_ENTERED`,
@@ -75,6 +79,11 @@ export class AspireBudget extends GoogleSheetsApi {
     if (resp.status !== 200) {
       throw new Error(`Failed to add transaction: ${resp.status}`);
     }
+
+    const json = await resp.json();
+    // the value is in format 'Transactions!B4143:H4143'
+    const rowNumber = json.updates.updatedRange.split(':')[1].slice(1);
+    return `tx-${rowNumber}`;
   }
 
   async addBudgetTransaction(data: BudgetTransaction): Promise<void> {
@@ -101,6 +110,23 @@ export class AspireBudget extends GoogleSheetsApi {
 
     if (resp.status !== 200) {
       throw new Error(`Failed to add budget transaction: ${resp.status}`);
+    }
+  }
+
+  async updateTransaction(data: Transaction): Promise<void> {
+    const rowNumber = data.id.slice(3); // id is in format tx-<rowNumber>
+    const body = this.txToBody(data);
+
+    const resp = await this.fetch(
+      `/values/Transactions!B${rowNumber}:H${rowNumber}?valueInputOption=USER_ENTERED`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(body),
+      }
+    );
+
+    if (resp.status !== 200) {
+      throw new Error(`Failed to add transaction: ${resp.status}`);
     }
   }
 
