@@ -126,7 +126,26 @@ export class AspireBudget extends GoogleSheetsApi {
     );
 
     if (resp.status !== 200) {
-      throw new Error(`Failed to add transaction: ${resp.status}`);
+      throw new Error(`Failed to update transaction: ${resp.status}`);
+    }
+  }
+
+  async deleteTransaction(id: string): Promise<void> {
+    const rowNumber = id.slice(3); // id is in format tx-<rowNumber>
+
+    const resp = await this.fetch(
+      `/values/Transactions!B${rowNumber}:H${rowNumber}?valueInputOption=USER_ENTERED`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({
+          majorDimension: 'ROWS',
+          values: [['', '', '', '', '', '', '']],
+        }),
+      }
+    );
+
+    if (resp.status !== 200) {
+      throw new Error(`Failed to delete transaction: ${resp.status}`);
     }
   }
 

@@ -137,3 +137,16 @@ export const updateAspireTransaction = async (
 
   return client.updateTransaction(transaction);
 };
+
+export const deleteAspireTransaction = async (id: string): Promise<void> => {
+  const client = $aspireClient.get();
+  if (!client) {
+    console.error({
+      error: 'No client, transaction not deleted',
+      id,
+    });
+    return;
+  }
+
+  return client.deleteTransaction(id);
+};

@@ -15,6 +15,7 @@ import {
   TransactionTableItem,
   $processedTransactions,
   updateTransaction,
+  deleteTransaction,
 } from './state';
 
 interface ColumnData {
@@ -118,6 +119,10 @@ function rowContent(_index: number, row: TransactionTableItem) {
               let key = column.dataKey;
               if (key === 'outflow' || key === 'inflow') {
                 key = 'amount';
+              }
+              if (key === 'status' && v === 'delete') {
+                deleteTransaction(row.id);
+                return;
               }
               updateTransaction({ ...row, [key]: v });
             }}

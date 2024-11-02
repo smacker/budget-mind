@@ -6,6 +6,8 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Amount } from '../../core/components/Amount';
 import AmountInput from '../../core/components/AmountInput';
@@ -250,16 +252,35 @@ export default function EditableTableCell(
         break;
       case 'status':
         children = (
-          <Button
-            variant="text"
-            sx={{ padding: 0, minWidth: 0, lineHeight: 0 }}
-            onClick={() => {
-              const newValue = value === 'settled' ? 'pending' : 'settled';
-              onChange(newValue);
+          <Paper
+            sx={{
+              position: 'absolute',
+              top: 0,
+              marginLeft: '-8px',
+              display: 'flex',
+              flexDirection: 'column',
+              zIndex: 1,
+              padding: '3px',
             }}
           >
-            <TextValue value={value} column={column} />
-          </Button>
+            <Button
+              variant="text"
+              sx={{ padding: 0, minWidth: 0, marginBottom: '5px' }}
+              onClick={() => {
+                const newValue = value === 'settled' ? 'pending' : 'settled';
+                onChange(newValue);
+              }}
+            >
+              <TextValue value={value} column={column} />
+            </Button>
+            <Button
+              variant="text"
+              sx={{ padding: 0, minWidth: 0, lineHeight: 0 }}
+              onClick={() => onChange('delete')}
+            >
+              <DeleteIcon color="error" />
+            </Button>
+          </Paper>
         );
         break;
     }

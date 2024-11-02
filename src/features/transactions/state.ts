@@ -9,6 +9,7 @@ import {
   addAspireBudgetTransaction,
   addAspireTransaction,
   updateAspireTransaction,
+  deleteAspireTransaction,
 } from '../sync/aspire';
 import { currencyNumberFormat } from '../../core/formatters';
 
@@ -47,6 +48,15 @@ export const updateTransaction = async (
       .map((tx) => (tx.id === transaction.id ? transaction : tx))
   );
   return updateAspireTransaction(transaction);
+};
+
+export const deleteTransaction = async (id: string): Promise<void> => {
+  if (!id) {
+    throw new Error('Transaction id is required');
+  }
+
+  $transactions.set($transactions.get().filter((tx) => tx.id !== id));
+  return deleteAspireTransaction(id);
 };
 
 export const addBudgetTransaction = async (
