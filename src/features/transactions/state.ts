@@ -243,7 +243,11 @@ export const $processedTransactions = computed(
     transactions.sort((a, b) => {
       if (a.date < b.date) return 1;
       if (a.date > b.date) return -1;
-      return 0;
+      // ids are in the format "tx-123"
+      const aId = +a.id.slice(3);
+      const bId = +b.id.slice(3);
+
+      return bId - aId;
     });
 
     return transactions;
