@@ -10,6 +10,7 @@ import ListItemText from '@mui/material/ListItemText';
 import ListSubheader from '@mui/material/ListSubheader';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ReceiptLongIcon from '@mui/icons-material/ShoppingCart';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import SettingsIcon from '@mui/icons-material/Settings';
 import InfoIcon from '@mui/icons-material/Info';
 
@@ -102,6 +103,15 @@ function MainMenu() {
           <ReceiptLongIcon />
         </ListItemIcon>
         <ListItemText primary="Transactions" />
+      </ListItemButton>
+      <ListItemButton
+        href={getPagePath($router, 'reports')}
+        selected={page?.route === 'reports'}
+      >
+        <ListItemIcon>
+          <AssessmentIcon />
+        </ListItemIcon>
+        <ListItemText primary="Reports" />
       </ListItemButton>
     </List>
   );

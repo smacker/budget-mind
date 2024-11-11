@@ -33,6 +33,7 @@ import {
 } from './features/transactions/state';
 import { $aspireSpreadSheetId } from './features/sync/aspire';
 import { MakeTransferDialog } from './features/transactions/MakeTransfer';
+import ReportsPage from './features/reports/ReportsPage';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -107,6 +108,8 @@ function Route() {
       return <DashboardPage />;
     case 'transactions':
       return <TransactionsPage />;
+    case 'reports':
+      return <ReportsPage />;
     default: {
       const _: never = route;
       throw new Error(`Unexpected route ${route}`);
