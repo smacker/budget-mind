@@ -3,8 +3,11 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import { format } from 'date-fns';
 import { $conditions, Condition, removeCondition } from './state';
+import { useTheme } from '@mui/material/styles';
 
-function makeLabel(condition: Condition) {
+function Label(condition: Condition) {
+  const theme = useTheme();
+
   let value = condition.value;
   if (value instanceof Date) {
     if ('type' in condition && condition.type === 'month') {
@@ -19,7 +22,10 @@ function makeLabel(condition: Condition) {
   return (
     <span>
       {condition.field}{' '}
-      <span style={{ color: '#999' }}>{condition.operator}</span> {value}
+      <span style={{ color: theme.palette.text.disabled }}>
+        {condition.operator}
+      </span>{' '}
+      {value}
     </span>
   );
 }
@@ -31,7 +37,7 @@ export function SelectedConditions() {
     <Box>
       {conditions.map((condition, i) => (
         <Chip
-          label={makeLabel(condition)}
+          label={Label(condition)}
           key={i}
           variant="outlined"
           onDelete={() => removeCondition(i)}

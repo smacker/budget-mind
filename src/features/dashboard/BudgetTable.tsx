@@ -5,6 +5,7 @@ import {
   addToBudgetCategory,
 } from './state';
 
+import { useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import Table from '@mui/material/Table';
@@ -26,19 +27,22 @@ function GroupRow({ row }: { row: DashboardTableItem }) {
       key={row.name}
       sx={{
         '&:last-child td, &:last-child th': { border: 0 },
-        backgroundColor: '#FAFAFA',
+        backgroundColor: 'background.secondary',
       }}
     >
       <TableCell scope="row" sx={{ lineHeight: '28px', fontWeight: 'bold' }}>
         {row.name}
       </TableCell>
-      <TableCell align="right" sx={{ color: '#AAAAAA', paddingRight: '22px' }}>
+      <TableCell
+        align="right"
+        sx={{ color: 'text.disabled', paddingRight: '22px' }}
+      >
         <Amount amount={row.budgeted} />
       </TableCell>
-      <TableCell align="right" sx={{ color: '#AAAAAA' }}>
+      <TableCell align="right" sx={{ color: 'text.disabled' }}>
         <Amount amount={row.activity} />
       </TableCell>
-      <TableCell align="right" sx={{ color: '#AAAAAA' }}>
+      <TableCell align="right" sx={{ color: 'text.disabled' }}>
         <Amount amount={row.available} />
       </TableCell>
       <TableCell sx={{ paddingLeft: 0 }}></TableCell>
@@ -47,6 +51,8 @@ function GroupRow({ row }: { row: DashboardTableItem }) {
 }
 
 function Progress({ value }: { value?: number }) {
+  const theme = useTheme();
+
   if (!value) {
     return null;
   }
@@ -65,20 +71,21 @@ function Progress({ value }: { value?: number }) {
   if (value < 0) {
     content = (
       <path
-        fill="red"
+        fill={theme.palette.amount.negative}
         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"
       />
     );
   } else if (value === 100) {
     content = (
       <path
-        fill="green"
+        fill={theme.palette.amount.positive}
         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
       />
     );
   } else {
     rotate = true;
-    const color = value > 30 ? 'green' : 'orange';
+    const color =
+      value > 30 ? theme.palette.amount.positive : theme.palette.warning.main;
     content = (
       <>
         <circle
@@ -86,7 +93,7 @@ function Progress({ value }: { value?: number }) {
           cx="50%"
           cy="50%"
           fill="none"
-          stroke="#f0f0f0"
+          stroke={theme.palette.background.secondary}
           strokeWidth={borderWith}
         ></circle>
         <circle

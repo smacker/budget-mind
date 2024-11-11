@@ -41,10 +41,10 @@ function Logo({ sx }: { sx?: SxProps<Theme> }) {
         <img src={logo} width={48} height={48} alt="Budget Mind Logo" />
       </Box>
       <Box textAlign="left">
-        <Typography noWrap fontSize={18} fontWeight="bold" color="#010101">
+        <Typography noWrap fontSize={18} fontWeight="bold" color="text.primary">
           Budget Mind
         </Typography>
-        <Typography noWrap fontSize={14} color="#A5A5A5" lineHeight={1}>
+        <Typography noWrap fontSize={14} color="text.secondary" lineHeight={1}>
           Personal finance
         </Typography>
       </Box>
@@ -150,7 +150,9 @@ export default function MenuSidebar() {
       <Logo
         sx={{
           height: '68px',
-          borderBottom: '1px solid #F0F0F0',
+          borderBottomWidth: '1px',
+          borderBottomStyle: 'solid',
+          borderBottomColor: 'divider',
         }}
       />
       <MainMenu />

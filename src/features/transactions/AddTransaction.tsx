@@ -104,16 +104,16 @@ export function AddTransactionDialog({
                   onChange={() => setIsInflow(!isInflow)}
                   sx={{
                     '&.MuiSwitch-root .MuiSwitch-switchBase': {
-                      color: '#cc0000',
+                      color: 'amount.negative',
                     },
                     '&.MuiSwitch-root .MuiSwitch-track': {
-                      backgroundColor: '#cc0000',
+                      backgroundColor: 'amount.negative',
                     },
                     '&.MuiSwitch-root .Mui-checked': {
-                      color: '#00aa00',
+                      color: 'amount.positive',
                     },
                     '&.MuiSwitch-root .Mui-checked + .MuiSwitch-track': {
-                      backgroundColor: '#00aa00',
+                      backgroundColor: 'amount.positive',
                     },
                   }}
                 />

@@ -14,6 +14,7 @@ import AmountInput from '../../core/components/AmountInput';
 import ConfirmableInput from '../../core/components/ConfirmableInput';
 import { $accounts, $categories } from '../../core/state';
 import { TransactionTableItem } from './state';
+import { useTheme } from '@mui/material';
 
 interface ColumnData {
   dataKey: keyof TransactionTableItem;
@@ -26,6 +27,8 @@ function TextValue({
   value: Date | React.ReactNode;
   column: ColumnData;
 }) {
+  const theme = useTheme();
+
   if (value instanceof Date) {
     return Intl.DateTimeFormat('en-UK', {}).format(value);
   }
@@ -33,10 +36,10 @@ function TextValue({
     return value === 'settled' ? '✅' : '🅿️';
   }
   if (column.dataKey === 'outflow' && typeof value === 'number') {
-    return <Amount amount={-value} textColor="red" />;
+    return <Amount amount={-value} textColor={theme.palette.amount.negative} />;
   }
   if (column.dataKey === 'inflow' && typeof value === 'number') {
-    return <Amount amount={value} textColor="green" />;
+    return <Amount amount={value} textColor={theme.palette.amount.positive} />;
   }
 
   return value;

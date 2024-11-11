@@ -35,15 +35,46 @@ import { $aspireSpreadSheetId } from './features/sync/aspire';
 import { MakeTransferDialog } from './features/transactions/MakeTransfer';
 
 declare module '@mui/material/styles' {
+  interface Palette {
+    amount: {
+      negative: string;
+      positive: string;
+    };
+  }
   interface TypeBackground {
     secondary: string;
+  }
+  interface PaletteOptions {
+    amount: {
+      negative: string;
+      positive: string;
+    };
   }
 }
 
 const defaultTheme = createTheme({
-  palette: {
-    background: {
-      secondary: '#FAFAFA',
+  colorSchemes: {
+    light: {
+      palette: {
+        background: {
+          secondary: '#FAFAFA',
+        },
+        amount: {
+          negative: '#d32f2f',
+          positive: '#2e7d32',
+        },
+      },
+    },
+    dark: {
+      palette: {
+        background: {
+          secondary: '#1F1F1F',
+        },
+        amount: {
+          negative: '#f44336',
+          positive: '#66bb6a',
+        },
+      },
     },
   },
 });
