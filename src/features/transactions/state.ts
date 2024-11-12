@@ -12,6 +12,7 @@ import {
   deleteAspireTransaction,
 } from '../sync/aspire';
 import { currencyNumberFormat } from '../../core/formatters';
+import { $router } from '../../router';
 
 // Public (to be used by other components) state
 
@@ -128,6 +129,32 @@ export type Condition =
   | NumberCondition;
 
 export const $conditions = atom<Condition[]>([]);
+
+$router.subscribe((v) => {
+  if (v?.route !== 'transactions' || !v?.search) {
+    return;
+  }
+
+  const conditions: Condition[] = [];
+  if (v.search.category) {
+    conditions.push({
+      field: 'category',
+      operator: 'is',
+      value: v.search.category,
+    });
+  }
+  if (v.search.account) {
+    conditions.push({
+      field: 'account',
+      operator: 'is',
+      value: v.search.account,
+    });
+  }
+
+  if (conditions.length) {
+    $conditions.set(conditions);
+  }
+});
 
 export const addCondition = (value: Condition) => {
   $conditions.set([...$conditions.get(), value]);

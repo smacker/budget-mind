@@ -19,6 +19,9 @@ import {
   $showAddTransactionPopup,
   $showMakeTransferPopup,
 } from '../transactions/state';
+import Link from '@mui/material/Link';
+import { getPagePath } from '@nanostores/router';
+import { $router } from '../../router';
 
 function formatDistance(a: Date, b: Date) {
   if (isEqual(a, b)) {
@@ -54,7 +57,17 @@ export function AccountsSummary() {
           }}
         >
           <ListItemText
-            primary={account.name}
+            primary={
+              <Link
+                color="inherit"
+                underline="none"
+                href={getPagePath($router, 'transactions', undefined, {
+                  account: account.name,
+                })}
+              >
+                {account.name}
+              </Link>
+            }
             secondary={
               <Box component="span">
                 <Box component="span" sx={{ marginRight: '.2em' }}>

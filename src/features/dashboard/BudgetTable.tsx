@@ -5,7 +5,7 @@ import {
   addToBudgetCategory,
 } from './state';
 
-import { useTheme } from '@mui/material';
+import { Link, useTheme } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
 import Table from '@mui/material/Table';
@@ -20,6 +20,8 @@ import { Amount } from '../../core/components/Amount';
 import { AvailableAmount } from './AvailableAmount';
 import { BudgetedInput } from './BudgetedInput';
 import { $showAddTransactionPopup } from '../../features/transactions/state';
+import { getPagePath } from '@nanostores/router';
+import { $router } from '../../router';
 
 function GroupRow({ row }: { row: DashboardTableItem }) {
   return (
@@ -148,7 +150,16 @@ function CategoryRow({ row }: { row: DashboardTableItem }) {
           },
         }}
       >
-        <span style={{ marginRight: '.2em' }}>{row.name}</span>
+        <Link
+          style={{ marginRight: '.2em' }}
+          color="inherit"
+          underline="none"
+          href={getPagePath($router, 'transactions', undefined, {
+            category: row.name,
+          })}
+        >
+          {row.name}
+        </Link>
         <Box
           className="rowActions"
           component="span"
