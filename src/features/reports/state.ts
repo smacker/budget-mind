@@ -1,11 +1,23 @@
-import { computed } from 'nanostores';
+import { atom, computed } from 'nanostores';
 import { $userCategories } from '../../core/state';
 import { $transactions } from '../transactions/state';
 import { eachMonthOfInterval, format } from 'date-fns';
 
+export const $excludedCategories = atom(new Set<string>());
+
+export function toggleExcludeCategory(category: string) {
+  const set = $excludedCategories.get();
+  if (set.has(category)) {
+    set.delete(category);
+  } else {
+    set.add(category);
+  }
+  $excludedCategories.set(new Set(set));
+}
+
 export const $trendReport = computed(
-  [$userCategories, $transactions],
-  (categories, transactions) => {
+  [$userCategories, $excludedCategories, $transactions],
+  (categories, excludeCategories, transactions) => {
     const sortedTransactions = transactions.sort(
       (a, b) => a.date.getTime() - b.date.getTime()
     );
@@ -15,20 +27,23 @@ export const $trendReport = computed(
     });
 
     const series = categories.map((c) => {
-      const data = months.map((month) => {
-        const monthTransactions = sortedTransactions.filter(
-          (tx) =>
-            tx.category === c.name &&
-            tx.date.getMonth() === month.getMonth() &&
-            tx.date.getFullYear() === month.getFullYear() &&
-            tx.amount < 0
-        );
-        const v =
-          monthTransactions.reduce((acc, tx) => acc + tx.amount, 0) / 100;
-        return v < 0 ? -v : 0;
-      });
+      const excluded = excludeCategories.has(c.name);
+      const data = excluded
+        ? months.map(() => 0)
+        : months.map((month) => {
+            const monthTransactions = sortedTransactions.filter(
+              (tx) =>
+                tx.category === c.name &&
+                tx.date.getMonth() === month.getMonth() &&
+                tx.date.getFullYear() === month.getFullYear() &&
+                tx.amount < 0
+            );
+            const v =
+              monthTransactions.reduce((acc, tx) => acc + tx.amount, 0) / 100;
+            return v < 0 ? -v : 0;
+          });
 
-      return { data, label: c.name, id: c.name, stack: 'total' };
+      return { data, label: c.name, id: c.name, stack: 'total', excluded };
     });
 
     return {
