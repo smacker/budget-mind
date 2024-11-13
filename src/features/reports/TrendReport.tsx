@@ -12,7 +12,7 @@ export default function TrendReport() {
   const colors = cheerfulFiestaPalette('dark');
 
   return (
-    <Stack direction="row">
+    <Stack direction="row" sx={{ minHeight: '100%' }}>
       <BarChart
         series={series.map((series) => ({
           ...series,
@@ -36,7 +36,7 @@ export default function TrendReport() {
       />
       <div>
         {series.map((item, i) => (
-          <Stack direction="row" alignItems="center" spacing={1}>
+          <Stack key={item.id} direction="row" alignItems="center" spacing={1}>
             <Box
               sx={{
                 width: 10,

@@ -110,7 +110,7 @@ function Route() {
     case 'transactions':
       return <TransactionsPage />;
     case 'reports':
-      return <ReportsPage />;
+      return <ReportsPage tab={page.params.tab} />;
     case 'settings':
       return <SettingsPage />;
     default: {
