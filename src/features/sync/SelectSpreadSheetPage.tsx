@@ -7,12 +7,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
-import { useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 
 import Main from '../../layout/Main';
-import { $spreadSheetId, $spreadsheets, loadSpreadsheets } from './state';
-import { $token } from './google';
+import { $spreadSheetId, $spreadsheets } from './state';
 import { $spreadSheetIdIsValidating, $spreadSheetIdStatus } from './aspire';
 
 function SelectSpreadSheetAppBar() {
@@ -24,17 +22,7 @@ function SelectSpreadSheetAppBar() {
 }
 
 function SpreadsheetSelector() {
-  const token = useStore($token);
   const spreadsheets = useStore($spreadsheets);
-
-  useEffect(() => {
-    if (!token) {
-      $spreadsheets.set([]);
-      return;
-    }
-
-    loadSpreadsheets(token);
-  }, [token]);
 
   return (
     <List>
@@ -54,7 +42,11 @@ export default function SelectSpreadSheetPage() {
   const spreadSheetIdIsValidating = useStore($spreadSheetIdIsValidating);
 
   return (
-    <Main appBarChildren={<SelectSpreadSheetAppBar />}>
+    <Main
+      appBarChildren={
+        spreadSheetIdIsValidating ? undefined : <SelectSpreadSheetAppBar />
+      }
+    >
       {spreadSheetStatus === 'error' ? (
         <Alert severity="error">
           Please make sure the spreadsheet is an Aspire Budgeting spreadsheet

@@ -34,6 +34,7 @@ import {
 import { $aspireSpreadSheetId } from './features/sync/aspire';
 import { MakeTransferDialog } from './features/transactions/MakeTransfer';
 import ReportsPage from './features/reports/ReportsPage';
+import SettingsPage from './features/settings/SettingsPage';
 
 declare module '@mui/material/styles' {
   interface Palette {
@@ -110,6 +111,8 @@ function Route() {
       return <TransactionsPage />;
     case 'reports':
       return <ReportsPage />;
+    case 'settings':
+      return <SettingsPage />;
     default: {
       const _: never = route;
       throw new Error(`Unexpected route ${route}`);

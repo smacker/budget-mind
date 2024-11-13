@@ -200,7 +200,7 @@ export class AspireBudget extends GoogleSheetsApi {
   protected async fetchAccounts(): Promise<Account[]> {
     const values = (await this.fetchValues(
       'Configuration',
-      '!I9:J23'
+      '!H9:I23'
     )) as string[][];
 
     const accounts: Account[] = [];

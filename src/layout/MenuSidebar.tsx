@@ -118,6 +118,8 @@ function MainMenu() {
 }
 
 function SecondaryMenu() {
+  const page = useStore($router);
+
   return (
     <List component="nav" sx={{ paddingBottom: '24px' }}>
       <Divider sx={{ my: 1 }} />
@@ -132,7 +134,10 @@ function SecondaryMenu() {
       >
         General
       </ListSubheader>
-      <ListItemButton>
+      <ListItemButton
+        href={getPagePath($router, 'settings')}
+        selected={page?.route === 'settings'}
+      >
         <ListItemIcon>
           <SettingsIcon />
         </ListItemIcon>

@@ -33,6 +33,7 @@ import {
   $spreadSheetIdStatus,
   $aspireSpreadSheetId,
 } from '../../features/sync/aspire';
+import { $spreadSheetInfo } from '../../features/settings/state';
 
 logger({
   // Core
@@ -54,6 +55,8 @@ logger({
   ShowMakeTransferPopup: $showMakeTransferPopup,
   Conditions: $conditions,
   ProcessedTransactions: $processedTransactions,
+  // Settings
+  SpreadSheetInfo: $spreadSheetInfo,
   // Sync
   ImportStatus: $importStatus,
   Spreadsheets: $spreadsheets,

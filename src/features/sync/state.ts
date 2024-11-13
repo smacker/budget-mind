@@ -1,6 +1,7 @@
-import { atom } from 'nanostores';
+import { atom, onMount } from 'nanostores';
 import { persistentAtom } from '@nanostores/persistent';
 import { fetchSpreadSheets } from '../../infra/storage/aspire/gdrive-api';
+import { $token } from './google';
 
 export const $importStatus = atom<'idle' | 'loading' | 'success' | 'error'>(
   'idle'
@@ -12,6 +13,15 @@ export type Spreadsheet = {
 };
 
 export const $spreadsheets = atom<Spreadsheet[]>([]);
+
+onMount($spreadsheets, () => {
+  const token = $token.get();
+  if (!token) {
+    return;
+  }
+
+  loadSpreadsheets(token);
+});
 
 export async function loadSpreadsheets(token: string) {
   const files = await fetchSpreadSheets(token);

@@ -28,6 +28,15 @@ export async function fetchSpreadSheets(token: string): Promise<
   return data.files;
 }
 
+export async function getSpreadSheetMetadata(
+  id: string,
+  token: string
+): Promise<{ id: string; name: string }> {
+  const resp = await _fetch(`${driveBaseURL}/files/${id}`, token);
+  const data = await resp.json();
+  return { id: data.id, name: data.name };
+}
+
 async function _fetch(url: string, token: string) {
   const resp = await fetch(url, {
     headers: {
