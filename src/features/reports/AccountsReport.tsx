@@ -1,4 +1,4 @@
-import { BarChart } from '@mui/x-charts/BarChart';
+import { BarPlot } from '@mui/x-charts/BarChart';
 import { useStore } from '@nanostores/react';
 import { $accountsReport, $selectedAccount } from './state';
 import { currencyFormat } from '../../core/formatters';
@@ -8,35 +8,54 @@ import Box from '@mui/material/Box';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { $accounts } from '../../core/state';
+import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis';
+import { LinePlot, MarkPlot } from '@mui/x-charts/LineChart';
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis';
+import { ChartsAxisHighlight } from '@mui/x-charts/ChartsAxisHighlight';
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip';
 
 export default function AccountsReport() {
   const accounts = useStore($accounts);
   const selectedAccount = useStore($selectedAccount);
   const { series, xLabels } = useStore($accountsReport);
   const colors = cheerfulFiestaPalette('dark');
+  const colorMap = {
+    inflow: colors[5],
+    outflow: colors[8],
+    transferred: colors[2],
+    endBalance: colors[0],
+  } as const;
 
   return (
     <Stack direction="row" sx={{ minHeight: '100%' }}>
-      <BarChart
+      <ResponsiveChartContainer
         series={series.map((series) => ({
           ...series,
-          valueFormatter: (v) => (v === null ? '' : currencyFormat(v)),
+          color: colorMap[series.id],
+          valueFormatter: (v: number | null) =>
+            v === null ? '' : currencyFormat(v),
         }))}
-        xAxis={[{ data: xLabels, scaleType: 'band' }]}
-        slotProps={{
-          legend: {
-            hidden: true,
-            direction: 'column',
-            position: { vertical: 'top', horizontal: 'right' },
-            itemMarkWidth: 10,
-            itemMarkHeight: 10,
-            labelStyle: {
-              fontSize: 12,
-            },
+        xAxis={[
+          {
+            data: xLabels,
+            scaleType: 'band',
+            id: 'x-axis-id',
+            valueFormatter: (v, context) =>
+              context.location === 'tick'
+                ? `${v.slice(0, 3)}\n${v.split(' ')[1]}`
+                : v,
           },
-        }}
-        colors={colors}
-      />
+        ]}
+      >
+        <ChartsAxisHighlight x="band" />
+        <BarPlot />
+        <LinePlot />
+        <MarkPlot />
+        <ChartsXAxis position="bottom" axisId="x-axis-id" />
+        <ChartsYAxis position="left" />
+        <ChartsTooltip />
+      </ResponsiveChartContainer>
       <Box width={250}>
         <Autocomplete
           renderInput={(params) => <TextField {...params} label="Account" />}

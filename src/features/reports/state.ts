@@ -75,8 +75,9 @@ export const $accountsReport = computed(
     });
 
     const inflow = {
+      type: 'bar' as const,
       label: 'Inflow',
-      id: 'inflow',
+      id: 'inflow' as const,
       stack: 'total',
       data: months.map((month) => {
         const monthTransactions = sortedTransactions.filter(
@@ -90,8 +91,9 @@ export const $accountsReport = computed(
       }),
     };
     const outflow = {
+      type: 'bar' as const,
       label: 'Outflow',
-      id: 'outflow',
+      id: 'outflow' as const,
       stack: 'total',
       data: months.map((month) => {
         const monthTransactions = sortedTransactions.filter(
@@ -105,8 +107,9 @@ export const $accountsReport = computed(
       }),
     };
     const tranferred = {
+      type: 'bar' as const,
       label: 'Transferred',
-      id: 'transferred',
+      id: 'transferred' as const,
       stack: 'total',
       data: months.map((month) => {
         const monthTransactions = sortedTransactions.filter(
@@ -118,7 +121,24 @@ export const $accountsReport = computed(
         return monthTransactions.reduce((acc, tx) => acc + tx.amount, 0) / 100;
       }),
     };
-    const series = [inflow, outflow, tranferred];
+    const endBalance = {
+      type: 'line' as const,
+      label: 'End Balance',
+      id: 'endBalance' as const,
+      data: months.reduce((acc, month) => {
+        const monthTransactions = sortedTransactions.filter(
+          (tx) =>
+            tx.date.getMonth() === month.getMonth() &&
+            tx.date.getFullYear() === month.getFullYear()
+        );
+        const prevValue = acc[acc.length - 1] || 0;
+        const v =
+          prevValue +
+          monthTransactions.reduce((acc, tx) => acc + tx.amount, 0) / 100;
+        return acc.concat([v]);
+      }, [] as number[]),
+    };
+    const series = [inflow, outflow, tranferred, endBalance];
 
     return {
       xLabels: months.map((month) => format(month, 'MMMM yyyy')),
