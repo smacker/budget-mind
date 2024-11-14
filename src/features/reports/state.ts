@@ -1,10 +1,68 @@
-import { atom, computed } from 'nanostores';
+import { atom, computed, map } from 'nanostores';
 import { $accounts, $userCategories } from '../../core/state';
 import { $transactions } from '../transactions/state';
 import { eachMonthOfInterval, format } from 'date-fns';
 import { accountTransfer } from '../../core/constants';
 
 export const $excludedCategories = atom(new Set<string>());
+
+const $sortedTransactions = computed($transactions, (transactions) =>
+  transactions.sort((a, b) => a.date.getTime() - b.date.getTime())
+);
+
+export const $startDate = computed(
+  $sortedTransactions,
+  (transactions) => transactions[0]?.date
+);
+export const $endDate = computed(
+  $sortedTransactions,
+  (transactions) => transactions[transactions.length - 1]?.date
+);
+
+export const $selectedDateRange = map<{
+  start: Date | null;
+  end: Date | null;
+}>({
+  start: null,
+  end: null,
+});
+
+export function selectAllRange() {
+  $selectedDateRange.set({
+    start: $startDate.get(),
+    end: $endDate.get(),
+  });
+}
+
+export function selectLastYearRange() {
+  const end = $endDate.get();
+  const start = new Date(end);
+  start.setFullYear(end.getFullYear() - 1);
+  $selectedDateRange.set({ start, end });
+}
+
+$startDate.subscribe((date) => {
+  if (date && !$selectedDateRange.get().start) {
+    $selectedDateRange.setKey('start', date);
+  }
+});
+
+$endDate.subscribe((date) => {
+  if (date && !$selectedDateRange.get().end) {
+    $selectedDateRange.setKey('end', date);
+  }
+});
+
+const $clippedTransactions = computed(
+  [$sortedTransactions, $selectedDateRange],
+  (transactions, range) =>
+    transactions.filter((tx) => {
+      if (!range.start || !range.end) {
+        return true;
+      }
+      return tx.date >= range.start && tx.date <= range.end;
+    })
+);
 
 export function toggleExcludeCategory(category: string) {
   const set = $excludedCategories.get();
@@ -17,14 +75,18 @@ export function toggleExcludeCategory(category: string) {
 }
 
 export const $trendReport = computed(
-  [$userCategories, $excludedCategories, $transactions],
+  [$userCategories, $excludedCategories, $clippedTransactions],
   (categories, excludeCategories, transactions) => {
-    const sortedTransactions = transactions.sort(
-      (a, b) => a.date.getTime() - b.date.getTime()
-    );
+    if (!transactions.length) {
+      return {
+        xLabels: [],
+        series: [],
+      };
+    }
+
     const months = eachMonthOfInterval({
-      start: sortedTransactions[0].date,
-      end: sortedTransactions[sortedTransactions.length - 1].date,
+      start: transactions[0].date,
+      end: transactions[transactions.length - 1].date,
     });
 
     const series = categories.map((c) => {
@@ -32,7 +94,7 @@ export const $trendReport = computed(
       const data = excluded
         ? months.map(() => 0)
         : months.map((month) => {
-            const monthTransactions = sortedTransactions.filter(
+            const monthTransactions = transactions.filter(
               (tx) =>
                 tx.category === c.name &&
                 tx.date.getMonth() === month.getMonth() &&
@@ -64,14 +126,21 @@ $accounts.subscribe((accounts) => {
 });
 
 export const $accountsReport = computed(
-  [$selectedAccount, $transactions],
+  [$selectedAccount, $clippedTransactions],
   (selectedAccount, transactions) => {
-    const sortedTransactions = transactions
-      .filter((tx) => tx.account === selectedAccount)
-      .sort((a, b) => a.date.getTime() - b.date.getTime());
+    const accountTransactions = transactions.filter(
+      (tx) => tx.account === selectedAccount
+    );
+    if (!accountTransactions.length) {
+      return {
+        xLabels: [],
+        series: [],
+      };
+    }
+
     const months = eachMonthOfInterval({
-      start: sortedTransactions[0].date,
-      end: sortedTransactions[sortedTransactions.length - 1].date,
+      start: accountTransactions[0].date,
+      end: accountTransactions[accountTransactions.length - 1].date,
     });
 
     const inflow = {
@@ -80,7 +149,7 @@ export const $accountsReport = computed(
       id: 'inflow' as const,
       stack: 'total',
       data: months.map((month) => {
-        const monthTransactions = sortedTransactions.filter(
+        const monthTransactions = accountTransactions.filter(
           (tx) =>
             tx.category !== accountTransfer &&
             tx.amount > 0 &&
@@ -96,7 +165,7 @@ export const $accountsReport = computed(
       id: 'outflow' as const,
       stack: 'total',
       data: months.map((month) => {
-        const monthTransactions = sortedTransactions.filter(
+        const monthTransactions = accountTransactions.filter(
           (tx) =>
             tx.category !== accountTransfer &&
             tx.amount < 0 &&
@@ -112,7 +181,7 @@ export const $accountsReport = computed(
       id: 'transferred' as const,
       stack: 'total',
       data: months.map((month) => {
-        const monthTransactions = sortedTransactions.filter(
+        const monthTransactions = accountTransactions.filter(
           (tx) =>
             tx.category === accountTransfer &&
             tx.date.getMonth() === month.getMonth() &&
@@ -126,7 +195,7 @@ export const $accountsReport = computed(
       label: 'End Balance',
       id: 'endBalance' as const,
       data: months.reduce((acc, month) => {
-        const monthTransactions = sortedTransactions.filter(
+        const monthTransactions = accountTransactions.filter(
           (tx) =>
             tx.date.getMonth() === month.getMonth() &&
             tx.date.getFullYear() === month.getFullYear()

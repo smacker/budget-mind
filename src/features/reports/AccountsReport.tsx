@@ -28,7 +28,19 @@ export default function AccountsReport() {
   } as const;
 
   return (
-    <Stack direction="row" sx={{ minHeight: '100%' }}>
+    <Stack sx={{ minHeight: '100%' }}>
+      <Box width={350} marginLeft="auto" marginRight="auto">
+        <Autocomplete
+          renderInput={(params) => <TextField {...params} label="Account" />}
+          options={accounts}
+          getOptionLabel={(option) => option.name}
+          filterSelectedOptions
+          disableClearable
+          fullWidth
+          value={accounts.find((c) => c.name === selectedAccount)}
+          onChange={(_e, value) => $selectedAccount.set(value.name)}
+        />
+      </Box>
       <ResponsiveChartContainer
         series={series.map((series) => ({
           ...series,
@@ -56,18 +68,6 @@ export default function AccountsReport() {
         <ChartsYAxis position="left" />
         <ChartsTooltip />
       </ResponsiveChartContainer>
-      <Box width={250}>
-        <Autocomplete
-          renderInput={(params) => <TextField {...params} label="Account" />}
-          options={accounts}
-          getOptionLabel={(option) => option.name}
-          filterSelectedOptions
-          disableClearable
-          fullWidth
-          value={accounts.find((c) => c.name === selectedAccount)}
-          onChange={(_e, value) => $selectedAccount.set(value.name)}
-        />
-      </Box>
     </Stack>
   );
 }
