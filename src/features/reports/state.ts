@@ -1,7 +1,7 @@
 import { atom, computed, map } from 'nanostores';
 import { $accounts, $userCategories } from '../../core/state';
 import { $transactions } from '../transactions/state';
-import { eachMonthOfInterval, format } from 'date-fns';
+import { eachMonthOfInterval, endOfMonth, format } from 'date-fns';
 import { accountTransfer } from '../../core/constants';
 
 export const $excludedCategories = atom(new Set<string>());
@@ -60,7 +60,13 @@ const $clippedTransactions = computed(
       if (!range.start || !range.end) {
         return true;
       }
-      return tx.date >= range.start && tx.date <= range.end;
+      const now = new Date();
+      const endDate =
+        range.end.getFullYear() === now.getFullYear() &&
+        range.end.getMonth() === now.getMonth()
+          ? now
+          : endOfMonth(range.end);
+      return tx.date >= range.start && tx.date <= endDate;
     })
 );
 

@@ -45,8 +45,9 @@ function ReportsAppBar(props: { tab: string }) {
         <DatePicker
           value={selectedDateRange.start}
           onChange={(v) => v && $selectedDateRange.setKey('start', v)}
+          views={['month', 'year']}
           /* FIXME: this should be coming from locale */
-          format="dd/MM/yyyy"
+          format="MMMM yyyy"
           slotProps={{
             textField: {
               label: 'Start Date',
@@ -58,8 +59,9 @@ function ReportsAppBar(props: { tab: string }) {
         <DatePicker
           value={selectedDateRange.end}
           onChange={(v) => v && $selectedDateRange.setKey('end', v)}
+          views={['month', 'year']}
           /* FIXME: this should be coming from locale */
-          format="dd/MM/yyyy"
+          format="MMMM yyyy"
           slotProps={{
             textField: {
               label: 'End Date',
