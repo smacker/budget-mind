@@ -1,7 +1,12 @@
 import { atom, computed, map } from 'nanostores';
 import { $accounts, $userCategories } from '../../core/state';
 import { $transactions } from '../transactions/state';
-import { eachMonthOfInterval, endOfMonth, format } from 'date-fns';
+import {
+  eachMonthOfInterval,
+  endOfMonth,
+  format,
+  startOfMonth,
+} from 'date-fns';
 import { accountTransfer } from '../../core/constants';
 
 export const $excludedCategories = atom(new Set<string>());
@@ -55,19 +60,24 @@ $endDate.subscribe((date) => {
 
 const $clippedTransactions = computed(
   [$sortedTransactions, $selectedDateRange],
-  (transactions, range) =>
-    transactions.filter((tx) => {
-      if (!range.start || !range.end) {
-        return true;
-      }
-      const now = new Date();
-      const endDate =
-        range.end.getFullYear() === now.getFullYear() &&
-        range.end.getMonth() === now.getMonth()
-          ? now
-          : endOfMonth(range.end);
-      return tx.date >= range.start && tx.date <= endDate;
-    })
+  (transactions, range) => {
+    const { start, end } = range;
+    if (!start || !end) {
+      return transactions;
+    }
+
+    const now = new Date();
+    const startDate = startOfMonth(start);
+    const endDate =
+      end.getFullYear() === now.getFullYear() &&
+      end.getMonth() === now.getMonth()
+        ? now
+        : endOfMonth(end);
+
+    return transactions.filter((tx) => {
+      return tx.date >= startDate && tx.date <= endDate;
+    });
+  }
 );
 
 export function toggleExcludeCategory(category: string) {
@@ -230,6 +240,33 @@ export const $accountsReport = computed(
     return {
       xLabels: months.map((month) => format(month, 'MMMM yyyy')),
       series,
+    };
+  }
+);
+
+export const $spendingReport = computed(
+  [$userCategories, $clippedTransactions],
+  (categories, transactions) => {
+    if (!transactions.length) {
+      return {
+        dataset: [],
+      };
+    }
+
+    const dataset = categories.map((c) => {
+      let data =
+        transactions
+          .filter((tx) => tx.category === c.name && tx.amount < 0)
+          .reduce((acc, tx) => acc + tx.amount, 0) / 100;
+      if (data < 0) {
+        data = -data;
+      }
+
+      return { data, label: c.name };
+    });
+
+    return {
+      dataset,
     };
   }
 );

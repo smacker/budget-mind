@@ -8,7 +8,6 @@ import {
 import { currencyFormat } from '../../core/formatters';
 import { cheerfulFiestaPalette } from '@mui/x-charts/colorPalettes';
 import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 
 export default function TrendReport() {

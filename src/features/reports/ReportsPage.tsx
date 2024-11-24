@@ -12,6 +12,7 @@ import {
   selectAllRange,
   selectLastYearRange,
 } from './state';
+import SpendingReport from './SpendingReport';
 
 function ReportsAppBar(props: { tab: string }) {
   const selectedDateRange = useStore($selectedDateRange);
@@ -95,7 +96,7 @@ export default function Reports(props: { tab?: string }) {
       child = <div>Category</div>;
       break;
     case 'spending':
-      child = <div>Spending</div>;
+      child = <SpendingReport />;
       break;
   }
 
