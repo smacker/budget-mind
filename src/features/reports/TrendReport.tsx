@@ -1,6 +1,10 @@
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useStore } from '@nanostores/react';
-import { $trendReport, toggleExcludeCategory } from './state';
+import {
+  $trendReport,
+  toggleExcludeCategory,
+  toggleOnlyCategory,
+} from './state';
 import { currencyFormat } from '../../core/formatters';
 import { cheerfulFiestaPalette } from '@mui/x-charts/colorPalettes';
 import Stack from '@mui/material/Stack';
@@ -37,8 +41,9 @@ export default function TrendReport() {
       <div>
         {series.map((item, i) => (
           <Stack key={item.id} direction="row" alignItems="center" spacing={1}>
-            <Box
+            <Link
               sx={{
+                display: 'block',
                 width: 10,
                 height: 10,
                 bgcolor: item.excluded ? undefined : colors[i % colors.length],
@@ -46,6 +51,9 @@ export default function TrendReport() {
                   ? `1px solid ${colors[i % colors.length]}`
                   : undefined,
               }}
+              underline="none"
+              href="#"
+              onClick={() => toggleOnlyCategory(item.label)}
             />
             <Link
               sx={{ whiteSpace: 'nowrap' }}

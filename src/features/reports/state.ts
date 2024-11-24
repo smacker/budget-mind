@@ -80,6 +80,18 @@ export function toggleExcludeCategory(category: string) {
   $excludedCategories.set(new Set(set));
 }
 
+export function toggleOnlyCategory(category: string) {
+  const allCategories = $userCategories.get();
+  const set = $excludedCategories.get();
+  if (set.size === allCategories.length - 1 && !set.has(category)) {
+    $excludedCategories.set(new Set());
+  } else {
+    $excludedCategories.set(
+      new Set(allCategories.map((c) => c.name).filter((c) => c !== category))
+    );
+  }
+}
+
 export const $trendReport = computed(
   [$userCategories, $excludedCategories, $clippedTransactions],
   (categories, excludeCategories, transactions) => {
