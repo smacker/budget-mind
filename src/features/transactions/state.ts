@@ -26,6 +26,7 @@ export const $showAddTransactionPopup = atom<
 
 export const $showMakeTransferPopup = atom<false | Partial<NewTransfer>>(false);
 
+// FIXME it is possible we add more than 1 transaction before it is synced to remote
 export const addTransaction = async (
   transaction: Transaction
 ): Promise<void> => {
@@ -60,11 +61,15 @@ export const deleteTransaction = async (id: string): Promise<void> => {
   return deleteAspireTransaction(id);
 };
 
+// FIXME it is possible we add more than 1 transaction before it is synced to remote
 export const addBudgetTransaction = async (
   tx: BudgetTransaction
 ): Promise<void> => {
   $budgetTransactions.set([...$budgetTransactions.get(), tx]);
-  return addAspireBudgetTransaction(tx);
+  const txId = await addAspireBudgetTransaction(tx);
+  $budgetTransactions.set(
+    $budgetTransactions.get().map((tx) => (tx.id ? tx : { ...tx, id: txId }))
+  );
 };
 
 // State scoped for the feature itself

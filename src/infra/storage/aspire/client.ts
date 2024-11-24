@@ -25,6 +25,7 @@ function toInteger(v?: unknown): number {
 
 export class AspireBudget extends GoogleSheetsApi {
   protected lastTxIndex = 0;
+  protected lastBudgetTxIndex = 0;
 
   async import(): Promise<ImportedData> {
     const [accounts, tmp, transactions, budgetTransactions] = await Promise.all(
@@ -86,7 +87,7 @@ export class AspireBudget extends GoogleSheetsApi {
     return `tx-${rowNumber}`;
   }
 
-  async addBudgetTransaction(data: BudgetTransaction): Promise<void> {
+  async addBudgetTransaction(data: BudgetTransaction): Promise<string> {
     const body = {
       majorDimension: 'ROWS',
       values: [
@@ -111,6 +112,11 @@ export class AspireBudget extends GoogleSheetsApi {
     if (resp.status !== 200) {
       throw new Error(`Failed to add budget transaction: ${resp.status}`);
     }
+
+    const json = await resp.json();
+    // the value is in format 'Category Transfers!B4143:G4143'
+    const rowNumber = json.updates.updatedRange.split(':')[1].slice(1);
+    return `btx-${rowNumber}`;
   }
 
   async updateTransaction(data: Transaction): Promise<void> {
@@ -290,30 +296,27 @@ export class AspireBudget extends GoogleSheetsApi {
   }
 
   protected async fetchCategoryTransfers(): Promise<BudgetTransaction[]> {
+    this.lastBudgetTxIndex = 9;
+
     const values = (await this.fetchValues(
       'Category Transfers',
-      '!B8:G'
+      `!B${this.lastBudgetTxIndex}:G`
     )) as unknown[][];
 
-    const trxs: BudgetTransaction[] = [];
     // date | amount | from category | to category | memo | *
-    for (const row of values.filter((row) => row[5] !== '*️⃣')) {
-      if (!row[1]) {
-        continue;
-      }
-
-      const date = this.serialNumberToDate(row[0] as number);
-      trxs.push(
-        new BudgetTransaction(
+    return values
+      .map((row) => [row, this.lastBudgetTxIndex++] as [unknown[], number])
+      .filter(([row]) => row[5] !== '*️⃣' && row[1])
+      .map(([row, idx]) => {
+        const date = this.serialNumberToDate(row[0] as number);
+        return new BudgetTransaction(
+          `btx-${idx}`,
           date,
           toInteger(row[1]),
           row[2] as string,
           row[3] as string,
           row[4] as string
-        )
-      );
-    }
-
-    return trxs;
+        );
+      });
   }
 }

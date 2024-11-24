@@ -261,7 +261,14 @@ export async function moveAmountToCategory(
   const date = isAfter(selectedMonth, today) ? selectedMonth : today;
 
   addBudgetTransaction(
-    new BudgetTransaction(date, amount, fromCategoryName, toCategoryName, memo)
+    new BudgetTransaction(
+      '',
+      date,
+      amount,
+      fromCategoryName,
+      toCategoryName,
+      memo
+    )
   );
 }
 

@@ -44,6 +44,7 @@ export type NewTransfer = Exclude<Transaction, 'id' | 'status' | 'account'> & {
 
 export class BudgetTransaction {
   constructor(
+    public id: string,
     public date: Date,
     public amount: number,
     public fromCategory: string,

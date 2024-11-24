@@ -39,6 +39,8 @@ export async function verifySpreadSheet(token: string, spreadsheetId: string) {
 export class GoogleSheetsApi {
   protected token: string;
   protected spreadsheetId: string;
+  // Add a mutex to ensure we don't fetch updates while posting new transaction
+  private mutex: Promise<unknown> = Promise.resolve();
 
   constructor(token: string, spreadsheetId: string) {
     this.token = token;
@@ -60,32 +62,37 @@ export class GoogleSheetsApi {
     return data.values;
   }
 
-  protected async fetch(url: string, params?: RequestInit) {
-    const resp = await fetch(`${sheetsBaseURL}/${this.spreadsheetId}${url}`, {
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        Authorization: `Bearer ${this.token}`,
-      },
-      ...params,
-    });
+  protected async fetch(url: string, params?: RequestInit): Promise<Response> {
+    const executeFetch = async (): Promise<Response> => {
+      const resp = await fetch(`${sheetsBaseURL}/${this.spreadsheetId}${url}`, {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${this.token}`,
+        },
+        ...params,
+      });
 
-    if (resp.status !== 200) {
-      let data;
-      try {
-        data = await resp.json();
-      } catch (e) {
-        console.error(e);
+      if (resp.status !== 200) {
+        let data;
+        try {
+          data = await resp.json();
+        } catch (e) {
+          console.error(e);
+        }
+
+        throw new GoogleSheetsApiError(
+          data?.error?.message || 'unknown api error',
+          'status',
+          resp.status,
+          data
+        );
       }
 
-      throw new GoogleSheetsApiError(
-        data?.error?.message || 'unknown api error',
-        'status',
-        resp.status,
-        data
-      );
-    }
+      return resp;
+    };
 
-    return resp;
+    this.mutex = this.mutex.then(() => executeFetch());
+    return this.mutex as Promise<Response>;
   }
 
   protected serialNumberToDate(serialNumber: number): Date {
