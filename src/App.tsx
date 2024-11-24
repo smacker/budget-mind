@@ -12,6 +12,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { Locale } from 'date-fns';
+import { $locale } from './core/state';
+import { loadLocale } from './core/locales';
 
 import NotFoundPage from './layout/NotFoundPage';
 import LoadingPage from './layout/LoadingPage';
@@ -121,10 +123,11 @@ function Route() {
 }
 
 function App() {
+  const locale = useStore($locale);
   const isLoggedIn = useStore($isLoggedIn);
   const showAddTransactionPopup = useStore($showAddTransactionPopup);
   const showMakeTransferPopup = useStore($showMakeTransferPopup);
-  const [locale, setLocale] = useState<Locale | undefined>();
+  const [dateFnsLocale, setDateFnsLocale] = useState<Locale | undefined>();
 
   useHotkeys('a', () => isLoggedIn && $showAddTransactionPopup.set({}), {
     keyup: true,
@@ -135,29 +138,22 @@ function App() {
 
   useEffect(() => {
     const run = async () => {
-      // TODO we should use `navigator.language` by default and override it from settings
-      // but there is no settings yet :)
-      //
-      // const localeName = navigator.language;
-      const localeName = 'en-GB';
-      try {
-        const locale: { default: Locale } = await import(
-          `../node_modules/date-fns/locale/${localeName}.mjs`
-        );
-        setLocale(locale.default);
-      } catch (e) {
-        console.warn(`can't load locale ${localeName}`);
-        console.error(e);
+      const dateFnsLocale = await loadLocale(locale);
+      if (dateFnsLocale) {
+        setDateFnsLocale(dateFnsLocale);
       }
     };
 
     run();
-  });
+  }, [locale]);
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
-      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={locale}>
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        adapterLocale={dateFnsLocale}
+      >
         <Box display="flex">
           <MenuSidebar />
           <Route />

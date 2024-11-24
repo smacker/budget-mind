@@ -4,9 +4,11 @@ import Chip from '@mui/material/Chip';
 import { format } from 'date-fns';
 import { $conditions, Condition, removeCondition } from './state';
 import { useTheme } from '@mui/material/styles';
+import { $locale } from '../../core/state';
 
 function Label(condition: Condition) {
   const theme = useTheme();
+  const locale = $locale.get();
 
   let value = condition.value;
   if (value instanceof Date) {
@@ -15,7 +17,7 @@ function Label(condition: Condition) {
     } else if ('type' in condition && condition.type === 'year') {
       value = format(value, 'yyyy');
     } else {
-      value = Intl.DateTimeFormat('en-UK', {}).format(value);
+      value = Intl.DateTimeFormat(locale, {}).format(value);
     }
   }
 

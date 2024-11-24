@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Amount } from '../../core/components/Amount';
 import AmountInput from '../../core/components/AmountInput';
 import ConfirmableInput from '../../core/components/ConfirmableInput';
-import { $accounts, $categories } from '../../core/state';
+import { $accounts, $categories, $dateFormat, $locale } from '../../core/state';
 import { TransactionTableItem } from './state';
 import { useTheme } from '@mui/material';
 
@@ -28,9 +28,10 @@ function TextValue({
   column: ColumnData;
 }) {
   const theme = useTheme();
+  const locale = $locale.get();
 
   if (value instanceof Date) {
-    return Intl.DateTimeFormat('en-UK', {}).format(value);
+    return Intl.DateTimeFormat(locale, {}).format(value);
   }
   if (column.dataKey === 'status') {
     return value === 'settled' ? '✅' : '🅿️';
@@ -74,8 +75,7 @@ export default function EditableTableCell(
                 onChange(e);
               }
             }}
-            /* FIXME: this should be coming from locale */
-            format="dd/MM/yyyy"
+            format={$dateFormat.get()}
             sx={{
               position: 'absolute',
               display: 'block',

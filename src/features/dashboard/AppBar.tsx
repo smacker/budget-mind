@@ -5,9 +5,9 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useStore } from '@nanostores/react';
 import { $availableYears, $selectedMonth } from './state';
 import { Tab, Tabs } from '@mui/material';
+import { $locale } from '../../core/state';
 
-// TODO: get locale from settings
-const formatter = new Intl.DateTimeFormat('en-GB', { month: 'short' }).format;
+const formatter = new Intl.DateTimeFormat($locale.get(), { month: 'short' }).format;
 const months = [...Array(12).keys()].map((m) => ({
   month: m,
   title: formatter(new Date(2023, m)),

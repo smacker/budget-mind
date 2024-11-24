@@ -9,7 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Autocomplete from '@mui/material/Autocomplete';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { $accounts, $categories } from '../../core/state';
+import { $accounts, $categories, $dateFormat } from '../../core/state';
 import { useStore } from '@nanostores/react';
 import { useEffect, useMemo, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -144,8 +144,7 @@ export function AddTransactionDialog({
               <DatePicker
                 value={field.value}
                 onChange={(e) => field.onChange(e || today)}
-                /* FIXME: this should be coming from locale */
-                format="dd/MM/yyyy"
+                format={$dateFormat.get()}
                 slotProps={{
                   textField: {
                     fullWidth: true,

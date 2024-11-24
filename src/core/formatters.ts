@@ -1,26 +1,29 @@
+import { currencies } from './currencies';
+import { $currency, $locale } from './state';
+
 // TODO get the actual values from settings with fallback on navigator.language
-export const currencyFormat = new Intl.NumberFormat('en-US', {
+export const currencyFormat = new Intl.NumberFormat($locale.get(), {
   style: 'currency',
   currencyDisplay: 'symbol',
-  currency: 'USD',
+  currency: $currency.get(),
 }).format;
 
-const currencyCodeFormat = new Intl.NumberFormat('en-US', {
+const currencyCodeFormat = new Intl.NumberFormat($locale.get(), {
   style: 'currency',
   currencyDisplay: 'code',
-  currency: 'USD',
+  currency: $currency.get(),
 }).format;
 export const currencyNumberFormat = (v: number | bigint) =>
-  currencyCodeFormat(v).replace('USD', '').trim();
+  currencyCodeFormat(v).replace($currency.get(), '').trim();
 
-export const currencySymbol = '$';
+export const currencySymbol = currencies[$currency.get()].symbolNative;
 
 export function parseCurrencyString(v: string): number {
   // use \p instead of \d to be able to parse non-arabic digits too
-  const thousandSeparator = Intl.NumberFormat('en-US')
+  const thousandSeparator = Intl.NumberFormat($locale.get())
     .format(11111)
     .replace(/\p{Number}/gu, '');
-  const decimalSeparator = Intl.NumberFormat('en-US')
+  const decimalSeparator = Intl.NumberFormat($locale.get())
     .format(1.1)
     .replace(/\p{Number}/gu, '');
 
