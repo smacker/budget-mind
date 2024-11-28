@@ -21,7 +21,7 @@ export const $locale = persistentAtom<string>(
 );
 export const $currency = persistentAtom<string>(
   'currency',
-  new Intl.Locale($locale.get()).region || 'USD'
+  getCurrencyFromLocale($locale.get())
 );
 export const $dateFormat = persistentAtom<string>(
   'date-format',
