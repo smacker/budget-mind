@@ -171,10 +171,7 @@ export class AspireBudget extends GoogleSheetsApi {
     // serialNumber | number  | number | string   | string  | string | ✅ | 🅿️ | *️⃣
     return values
       .map((row) => {
-        return [row, this.lastTxIndex++] as [unknown[], number];
-      })
-      .filter(([row]) => row[6] === '✅' || row[6] === '🅿️')
-      .map(([row, idx]) => {
+        const idx = this.lastTxIndex++;
         if (!row[0]) {
           console.warn(`Row ${idx} doesn't have date`, row);
         }
@@ -191,6 +188,10 @@ export class AspireBudget extends GoogleSheetsApi {
           console.warn(`Row ${idx} doesn't have status`, row);
         }
 
+        return [row, idx] as [unknown[], number];
+      })
+      .filter(([row]) => row[6] === '✅' || row[6] === '🅿️')
+      .map(([row, idx]) => {
         return new Transaction(
           `tx-${idx}`,
           this.serialNumberToDate(row[0] as number),
@@ -296,7 +297,7 @@ export class AspireBudget extends GoogleSheetsApi {
   }
 
   protected async fetchCategoryTransfers(): Promise<BudgetTransaction[]> {
-    this.lastBudgetTxIndex = 9;
+    this.lastBudgetTxIndex = 8;
 
     const values = (await this.fetchValues(
       'Category Transfers',
