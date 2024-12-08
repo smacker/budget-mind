@@ -4,7 +4,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Main from '../../layout/Main';
-import { $spreadSheetInfo } from './state';
+import { $spreadSheetInfo, dataExport } from './state';
 import { $spreadSheetId } from '../sync/state';
 import { $currency, $dateFormat, $locale } from '../../core/state';
 import { currencyCodes } from '../../core/currencies';
@@ -48,7 +48,7 @@ export default function SettingsPage() {
           ) : null}
         </CardContent>
       </Card>
-      <Card variant="outlined">
+      <Card variant="outlined" sx={{ marginBottom: '1em' }}>
         <CardContent sx={{ maxWidth: 500, color: 'text.secondary' }}>
           <Typography gutterBottom variant="h5" component="div">
             Localization
@@ -99,6 +99,16 @@ export default function SettingsPage() {
               disableClearable
             />
           </Box>
+        </CardContent>
+      </Card>
+      <Card variant="outlined">
+        <CardContent>
+          <Typography gutterBottom variant="h5" component="div">
+            Tools
+          </Typography>
+          <Button size="small" variant="contained" onClick={dataExport}>
+            Export
+          </Button>
         </CardContent>
       </Card>
     </Main>
