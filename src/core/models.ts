@@ -52,3 +52,13 @@ export class BudgetTransaction {
     public memo: string
   ) {}
 }
+
+export class NetWorthUpdate {
+  constructor(
+    public id: string,
+    public date: Date,
+    public amount: number,
+    public category: string,
+    public notes: string
+  ) {}
+}

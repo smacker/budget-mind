@@ -1,6 +1,6 @@
 import { atom, computed } from 'nanostores';
 import { persistentAtom } from '@nanostores/persistent';
-import { Account, Category, CategoryGroup } from './models';
+import { Account, Category, CategoryGroup, NetWorthUpdate } from './models';
 import { fixedCategories } from './constants';
 import { getDateFormatFromLocale } from './date-formats';
 import { getCurrencyFromLocale } from './currencies';
@@ -14,6 +14,7 @@ export const $categories = computed($userCategories, (userCategories) => [
   ...userCategories,
   ...fixedCategories,
 ]);
+export const $netWorthUpdates = atom<NetWorthUpdate[]>([]);
 
 export const $locale = persistentAtom<string>(
   'locale',

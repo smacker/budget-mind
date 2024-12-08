@@ -5,8 +5,14 @@ import {
   CategoryGroup,
   Transaction,
   BudgetTransaction,
+  NetWorthUpdate,
 } from '../../core/models';
-import { $accounts, $userCategories, $categoryGroups } from '../../core/state';
+import {
+  $accounts,
+  $userCategories,
+  $categoryGroups,
+  $netWorthUpdates,
+} from '../../core/state';
 import {
   $transactions,
   $budgetTransactions,
@@ -19,6 +25,7 @@ export interface ImportedData {
   categories: Category[];
   transactions: Transaction[];
   budgetTransactions: BudgetTransaction[];
+  netWorthUpdates: NetWorthUpdate[];
 }
 
 export interface Importer {
@@ -35,6 +42,7 @@ export async function importData(importer: Importer): Promise<void> {
     $userCategories.set(data.categories);
     $transactions.set(data.transactions);
     $budgetTransactions.set(data.budgetTransactions);
+    $netWorthUpdates.set(data.netWorthUpdates);
   } catch (e) {
     $importStatus.set('error');
     throw e;
@@ -80,4 +88,5 @@ export async function updateData(importer: Importer): Promise<void> {
   syncStore($userCategories, data.categories);
   syncStore($transactions, data.transactions);
   syncStore($budgetTransactions, data.budgetTransactions);
+  syncStore($netWorthUpdates, data.netWorthUpdates);
 }

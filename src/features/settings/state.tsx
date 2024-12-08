@@ -2,7 +2,12 @@ import { atom, onMount } from 'nanostores';
 import { getSpreadSheetMetadata } from '../../infra/storage/aspire/gdrive-api';
 import { $token } from '../sync/google';
 import { $aspireSpreadSheetId } from '../sync/aspire';
-import { $accounts, $categories, $categoryGroups } from '../../core/state';
+import {
+  $accounts,
+  $categories,
+  $categoryGroups,
+  $netWorthUpdates,
+} from '../../core/state';
 import { $budgetTransactions, $transactions } from '../transactions/state';
 import { format } from 'date-fns';
 
@@ -34,9 +39,11 @@ export function dataExport() {
       closed: account.hidden,
     })),
     categoryGroups: $categoryGroups.get().map((group) => ({
+      id: group.id,
       name: group.name,
     })),
     categories: $categories.get().map((category) => ({
+      id: category.id,
       name: category.name,
       groupName: category.group,
     })),
@@ -50,10 +57,18 @@ export function dataExport() {
       cleared: tx.status === 'settled', // ensure no "undefined" values
     })),
     budgetTransactions: $budgetTransactions.get().map((tx) => ({
+      id: tx.id,
       date: format(tx.date, 'yyyy-MM-dd'),
       amount: tx.amount,
       from_category: tx.fromCategory,
       to_category: tx.toCategory,
+    })),
+    netWorthUpdates: $netWorthUpdates.get().map((update) => ({
+      id: update.id,
+      date: format(update.date, 'yyyy-MM-dd'),
+      amount: update.amount,
+      category: update.category,
+      notes: update.notes,
     })),
   });
   const blob = new Blob([data], { type: 'application/json' });

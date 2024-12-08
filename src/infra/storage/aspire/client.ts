@@ -4,6 +4,7 @@ import {
   CategoryGroup,
   Transaction,
   BudgetTransaction,
+  NetWorthUpdate,
 } from '../../../core/models';
 import { GoogleSheetsApi } from './gsheet-api';
 import { ImportedData } from '../../../features/sync/importer';
@@ -26,16 +27,17 @@ function toInteger(v?: unknown): number {
 export class AspireBudget extends GoogleSheetsApi {
   protected lastTxIndex = 0;
   protected lastBudgetTxIndex = 0;
+  protected lastNetWorthTxIndex = 0;
 
   async import(): Promise<ImportedData> {
-    const [accounts, tmp, transactions, budgetTransactions] = await Promise.all(
-      [
+    const [accounts, tmp, transactions, budgetTransactions, netWorthUpdates] =
+      await Promise.all([
         this.fetchAccounts(),
         this.fetchCategories(),
         this.fetchTransactions(),
         this.fetchCategoryTransfers(),
-      ]
-    );
+        this.fetchNetWorthUpdates(),
+      ]);
     const [categoryGroups, categories] = tmp;
 
     // TODO validation
@@ -45,6 +47,7 @@ export class AspireBudget extends GoogleSheetsApi {
       categories,
       transactions,
       budgetTransactions,
+      netWorthUpdates,
     };
   }
 
@@ -317,6 +320,31 @@ export class AspireBudget extends GoogleSheetsApi {
           row[2] as string,
           row[3] as string,
           row[4] as string
+        );
+      });
+  }
+
+  protected async fetchNetWorthUpdates(): Promise<NetWorthUpdate[]> {
+    this.lastNetWorthTxIndex = 20;
+
+    const values = (await this.fetchValues(
+      'Net Worth Reports',
+      `!B${this.lastNetWorthTxIndex}:F`
+    )) as unknown[][];
+    console.log(values);
+
+    // date | amount | category | note | *
+    return values
+      .map((row) => [row, this.lastNetWorthTxIndex++] as [unknown[], number])
+      .filter(([row]) => row[4] !== '*️⃣' && row[1])
+      .map(([row, idx]) => {
+        const date = this.serialNumberToDate(row[0] as number);
+        return new NetWorthUpdate(
+          `nw-${idx}`,
+          date,
+          toInteger(row[1]),
+          row[2] as string,
+          row[3] as string
         );
       });
   }
